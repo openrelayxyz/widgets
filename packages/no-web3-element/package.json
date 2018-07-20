@@ -1,0 +1,30 @@
+{
+  "name": "@openrelay/no-web3-element",
+  "version": "0.1.0",
+  "description": "A lit-element for rendering content when no web3 is available",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "lit-element",
+    "openrelay",
+    "web3",
+    "0x"
+  ],
+  "devDependencies": {
+    "rollup": "^0.63.2",
+    "rollup-plugin-commonjs": "^9.1.3",
+    "rollup-plugin-json": "^3.0.0",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-resolve": "^3.3.0"
+  },
+  "author": "OpenRelay LLC",
+  "license": "LGPL-3.0",
+  "dependencies": {
+  },
+  "peerDependencies": {
+    "@openrelay/web3-element": "^0.1.0",
+    "@polymer/lit-element": "^0.5.2"
+  }
+}
