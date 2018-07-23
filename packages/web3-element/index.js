@@ -13,7 +13,7 @@ export default class OrWeb3 extends LitElement {
   _firstRendered() {
     this.web3Children = [];
     this.addEventListener('web3-child', e => this.registerChild(e));
-    this.addEventListener('set-web3', e => this.setWeb3(e.web3));
+    this.addEventListener('set-web3', e => this.setWeb3(e.detail.web3));
     this.hasWeb3 = false;
     this.topAccount = null;
     this.network = null;

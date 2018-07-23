@@ -1,0 +1,17 @@
+{
+  "name": "@openrelay/element-test-utils",
+  "version": "0.1.0",
+  "description": "Utilities for testing OpenRelay's LitElement components",
+  "main": "index.js",
+  "author": "OpenRelay LLC",
+  "license": "LGPL-3.0",
+  "private": false,
+  "devDependencies": {
+    "events": "^3.0.0",
+    "web3": "0.20.6",
+    "web3-fake-provider": "^0.1.0",
+    "web3-provider-engine": "^14.0.6",
+    "webpack": "^4.16.2",
+    "webpack-cli": "^3.1.0"
+  }
+}
