@@ -4,7 +4,10 @@
   "description": "A lit-element tag for managing web3",
   "main": "index.js",
   "scripts": {
-    "test": "rollup -c rollup.config.js && wct --npm -l chrome"
+    "build": "webpack",
+    "testserver": "ganache-cli -p 17545 &",
+    "test": "npm run build && npm run testserver && wct --npm -l chrome ; npm run killtestserver",
+    "killtestserver": "pkill -f ganache-cli"
   },
   "keywords": [
     "lit-element",

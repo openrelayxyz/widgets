@@ -17,12 +17,25 @@
       });
       test('hasWeb3', function(done) {
         var web3 = elementtestutils.getFakeWeb3();
+        web3.eth.getAccounts(console.log);
         document.getElementById('fixture').dispatchEvent(new CustomEvent('set-web3', {detail: {web3: web3}, bubbles: false, composed: false}));
         assert.isTrue(document.getElementById('fixture').hasWeb3);
         setTimeout(function(){
           assert.isTrue(document.getElementById('fixture').getBoundingClientRect().width != 0);
+          web3.currentProvider.stop();
           done();
         }, 10);
+      });
+      test('topAccount', function(done) {
+        var web3 = elementtestutils.getFakeWeb3();
+        document.getElementById('fixture').dispatchEvent(new CustomEvent('set-web3', {detail: {web3: web3}, bubbles: false, composed: false}));
+        assert.isTrue(document.getElementById('fixture').hasWeb3);
+        setTimeout(function(){
+          assert.isTrue(document.getElementById('fixture').getBoundingClientRect().width != 0);
+          assert.equal(document.getElementById('fixture').topAccount, '0xf00df00df00df00df00df00df00df00df00df00d');
+          web3.currentProvider.stop();
+          done();
+        }, 1000);
       });
     });
   </script>

@@ -1,12 +1,18 @@
 //
 import * as ProviderEngine from 'web3-provider-engine';
-import * as HookedWalletSubprovider from 'web3-provider-engine/subproviders/hooked-wallet';
+import * as CacheSubprovider from 'web3-provider-engine/subproviders/cache';
 import * as FixtureSubprovider from 'web3-provider-engine/subproviders/fixture';
+import * as FilterSubprovider from 'web3-provider-engine/subproviders/filters';
+import * as HookedWalletSubprovider from 'web3-provider-engine/subproviders/hooked-wallet';
+import * as NonceSubprovider from 'web3-provider-engine/subproviders/nonce-tracker';
+import * as RpcSubprovider from 'web3-provider-engine/subproviders/rpc';
+import Web3 from 'web3';
 
 
 export function getFakeWeb3() {
+
   var engine = new ProviderEngine()
-  var web3 = new window.Web3(engine)
+  var web3 = new Web3(engine)
 
   // static results
   engine.addProvider(new FixtureSubprovider({
@@ -17,11 +23,26 @@ export function getFakeWeb3() {
     eth_syncing: true,
   }))
 
+  // cache layer
+  engine.addProvider(new CacheSubprovider())
+
+  // filters
+  engine.addProvider(new FilterSubprovider())
+
+  // pending nonce
+  engine.addProvider(new NonceSubprovider())
+
+
   // id mgmt
   engine.addProvider(new HookedWalletSubprovider({
-    getAccounts: function(cb){ [cb(null, ["0xf00df00df00df00df00df00df00df00df00df00d"])] },
-    approveTransaction: function(cb){ cb("not implemented, null") },
-    signTransaction: function(cb){ "not implemented", "null" },
+    getAccounts: function(cb){ cb(null, ["0xf00df00df00df00df00df00df00df00df00df00d"]) },
+    approveTransaction: function(cb){ cb("not implemented") },
+    signTransaction: function(cb){ cb("not implemented") },
+  }))
+
+  // data source
+  engine.addProvider(new RpcSubprovider({
+    rpcUrl: 'http://localhost:17545/',
   }))
 
   // network connectivity error
@@ -32,8 +53,5 @@ export function getFakeWeb3() {
 
   // start polling for blocks
   engine.start()
-
-  console.log(web3.eth.getAccounts());
-
-  return web3;
+  return web3
 }
