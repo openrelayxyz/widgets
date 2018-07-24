@@ -17,7 +17,6 @@
       });
       test('hasWeb3', function(done) {
         var web3 = elementtestutils.getFakeWeb3();
-        web3.eth.getAccounts(console.log);
         document.getElementById('fixture').dispatchEvent(new CustomEvent('set-web3', {detail: {web3: web3}, bubbles: false, composed: false}));
         assert.isTrue(document.getElementById('fixture').hasWeb3);
         setTimeout(function(){

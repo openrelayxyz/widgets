@@ -4,7 +4,11 @@
   "description": "A lit-element that displays the current web3 account",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack",
+    "demo-build": "webpack --config webpack.demo.config.js",
+    "testserver": "ganache-cli -p 17545 &",
+    "test": "npm run build && npm run testserver && wct --npm -l chrome ; npm run killtestserver",
+    "killtestserver": "pkill -f ganache-cli"
   },
   "keywords": [
     "lit-element",
@@ -13,32 +17,23 @@
     "0x"
   ],
   "devDependencies": {
-    "rollup": "^0.63.2",
-    "rollup-plugin-commonjs": "^9.1.3",
-    "rollup-plugin-json": "^3.0.0",
-    "rollup-plugin-node-builtins": "^2.1.2",
-    "rollup-plugin-node-resolve": "^3.3.0"
+    "@openrelay/element-test-utils": "../test-utils/",
+    "ganache-core": "2.1.0",
+    "sinon": "^6.1.4",
+    "sinon-chai": "^3.2.0",
+    "wct-browser-legacy": "^1.0.1",
+    "web-component-tester": "^6.7.1",
+    "web3": "^0.20.6",
+    "webcomponentsjs": "^1.0.2",
+    "webpack": "^4.16.2",
+    "webpack-cli": "^3.1.0"
   },
   "author": "OpenRelay LLC",
   "license": "LGPL-3.0",
   "dependencies": {
-    "@openrelay/no-web3-element": "^0.1.0",
-    "@openrelay/web3-base": "^0.1.0",
-    "@openrelay/web3-element": "^0.1.0",
+    "@openrelay/no-web3-element": "../no-web3-element",
+    "@openrelay/web3-base": "../web3-base",
+    "@openrelay/web3-element": "../web3-element",
     "@polymer/lit-element": "^0.5.2"
-  },
-  "peerDependencies": {
-    "@polymer/lit-element": "^0.5.2"
-  },
-  "resolutions": {
-    "kind-of": "6.0.2",
-    "is-number": "4.0.0",
-    "isarray": "1.0.0",
-    "xtend": "3.0.0",
-    "readable-stream": "2.3.6",
-    "string_decoder": "1.1.1",
-    "prr": "1.0.1",
-    "level-fix-range": "2.0.0",
-    "object-keys": "0.4.0"
   }
 }
