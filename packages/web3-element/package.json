@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "testserver": "ganache-cli -p 17545 &",
-    "test": "npm run build && npm run testserver && wct --npm -l chrome ; npm run killtestserver",
-    "killtestserver": "pkill -f ganache-cli"
+    "testserver": "ganache-cli -p 17545",
+    "test": "npm run build && concurrently --success first --kill-others 'wct --npm -l chrome' 'npm run testserver'"
   },
   "keywords": [
     "lit-element",
@@ -17,6 +16,7 @@
   ],
   "devDependencies": {
     "@openrelay/element-test-utils": "../test-utils/",
+    "concurrently": "^3.6.0",
     "ganache-core": "2.1.0",
     "sinon": "^6.1.4",
     "sinon-chai": "^3.2.0",
