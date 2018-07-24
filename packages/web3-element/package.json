@@ -15,7 +15,7 @@
     "0x"
   ],
   "devDependencies": {
-    "@openrelay/element-test-utils": "../test-utils/",
+    "@openrelay/element-test-utils": "^0.1.0",
     "concurrently": "^3.6.0",
     "ganache-core": "2.1.0",
     "sinon": "^6.1.4",

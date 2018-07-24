@@ -6,6 +6,9 @@
   "author": "OpenRelay LLC",
   "license": "LGPL-3.0",
   "private": false,
+  "scripts": {
+    "build": "webpack"
+  },
   "devDependencies": {
     "events": "^3.0.0",
     "web3": "0.20.6",

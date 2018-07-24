@@ -16,7 +16,7 @@
     "0x"
   ],
   "devDependencies": {
-    "@openrelay/element-test-utils": "../test-utils/",
+    "@openrelay/element-test-utils": "^0.1.0",
     "concurrently": "^3.6.0",
     "ganache-core": "2.1.0",
     "sinon": "^6.1.4",
@@ -31,9 +31,9 @@
   "author": "OpenRelay LLC",
   "license": "LGPL-3.0",
   "dependencies": {
-    "@openrelay/no-web3-element": "../no-web3-element",
-    "@openrelay/web3-base": "../web3-base",
-    "@openrelay/web3-element": "../web3-element",
+    "@openrelay/no-web3-element": "^0.1.0",
+    "@openrelay/web3-base": "^0.1.0",
+    "@openrelay/web3-element": "^0.1.0",
     "@polymer/lit-element": "^0.5.2"
   }
 }
