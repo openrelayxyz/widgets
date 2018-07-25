@@ -1,0 +1,9 @@
+{
+  "name": "@openrelay/element-utilities",
+  "version": "0.1.0",
+  "description": "Tools to help build OpenRelay LitElements",
+  "main": "index.js",
+  "author": "OpenRelay LLC",
+  "license": "LGPL-3.0",
+  "private": false
+}

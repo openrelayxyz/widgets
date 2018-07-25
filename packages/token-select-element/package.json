@@ -1,7 +1,7 @@
 {
-  "name": "@openrelay/web3-account-element",
+  "name": "@openrelay/token-select-element",
   "version": "0.1.0",
-  "description": "A lit-element that displays the current web3 account",
+  "description": "A lit-element that provides a list of tokens to select from",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
@@ -16,9 +16,16 @@
     "0x"
   ],
   "devDependencies": {
+    "@babel/core": "^7.0.0-beta.54",
+    "@babel/plugin-proposal-export-default-from": "^7.0.0-beta.54",
+    "@babel/preset-env": "^7.0.0-beta.54",
     "@openrelay/element-test-utils": "^0.1.0",
+    "babel-loader": "^8.0.0-beta",
     "concurrently": "^3.6.0",
     "ganache-core": "2.1.0",
+    "karma": "^2.0.5",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^3.0.0",
     "sinon": "^6.1.4",
     "sinon-chai": "^3.2.0",
     "web3": "^0.20.6",
@@ -30,6 +37,7 @@
   "dependencies": {
     "@openrelay/web3-base": "^0.1.0",
     "@openrelay/web3-element": "^0.1.0",
-    "@polymer/lit-element": "^0.5.2"
+    "@polymer/lit-element": "^0.5.2",
+    "request-promise-native": "^1.0.5"
   }
 }

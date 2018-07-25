@@ -25,7 +25,6 @@ export default class OrWeb3 extends LitElement {
     }, 100)
   }
   registerChild(e) {
-    console.log("registering child", e);
     this.web3Children.push(e.detail.element);
     if(this.hasWeb3) {
       this.dispatchEvent(new CustomEvent('web3-ready', {detail: {web3: this.web3, account: this.topAccount}, bubbles: false, composed: false}));
