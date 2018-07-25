@@ -6,11 +6,12 @@ export default class OrWeb3 extends LitElement {
     if(hasWeb3) {
       return html`<slot></slot>`;
     } else {
-      return html``;
+      return html`<slot name="noweb3">You need web3 to view this content</slot>`;
     }
   }
   static get properties() { return {hasWeb3: Boolean, accountCheckInterval: {type: Number, value: 2000} }}
-  _firstRendered() {
+  ready() {
+    super.ready();
     this.web3Children = [];
     this.addEventListener('web3-child', e => this.registerChild(e));
     this.addEventListener('set-web3', e => this.setWeb3(e.detail.web3));
@@ -33,7 +34,6 @@ export default class OrWeb3 extends LitElement {
   setWeb3(web3) {
     this.hasWeb3 = true;
     this.web3 = new Web3(web3.currentProvider);
-    console.log(this.web3);
     clearInterval(this.web3Interval);
     for(var child of this.web3Children) {
       child.dispatchEvent(new CustomEvent('web3-ready', {detail: {web3: this.web3}, bubbles: false, composed: false}));
