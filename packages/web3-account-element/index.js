@@ -15,9 +15,14 @@ export default class OrWeb3Account extends OrWeb3Base {
   ready() {
     super.ready();
     this.addEventListener('web3-account', e => this.setAccount(e));
+    this.accountReady = new Promise((resolve, reject) => {
+      this.resolveAccount = resolve;
+    });
   }
   setAccount(e) {
     this.account = e.detail.account;
+    this.resolveAccount(this.account);
+    this.accountReady = Promise.resolve(this.account);
   }
 }
 
