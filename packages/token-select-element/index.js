@@ -1,7 +1,7 @@
 import {html} from '@polymer/lit-element';
 import OrWeb3Base from '@openrelay/web3-base';
 import tokenList from '@openrelay/element-utilities/tokens.json';
-import rp from "request-promise-native";
+import request from "@openrelay/element-utilities/request";
 
 export default class OrTokenSelect extends OrWeb3Base {
   static get is() { return "or-token-select" };
@@ -31,8 +31,8 @@ export default class OrTokenSelect extends OrWeb3Base {
     }
     if(this.tokenListUrl) {
       this.tokens = [];
-      this.initialized = rp({uri: this.tokenListUrl, baseUrl: window.location.origin, json: true}).then((result) => {
-        this.tokens = result;
+      this.initialized = request({url: this.tokenListUrl}).then((result) => {
+        this.tokens = JSON.parse(result);
         this.initializeSelected();
       });
     } else {
