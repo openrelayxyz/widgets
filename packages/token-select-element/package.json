@@ -7,7 +7,7 @@
     "build": "webpack",
     "demo-build": "webpack --config webpack.demo.config.js",
     "testserver": "ganache-cli -p 17545",
-    "test": "npm run build && concurrently --success first --kill-others 'wct --npm -l chrome' 'npm run testserver'"
+    "test": "concurrently --success first --kill-others 'karma start' 'npm run testserver'"
   },
   "keywords": [
     "lit-element",

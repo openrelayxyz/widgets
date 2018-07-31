@@ -1,13 +1,29 @@
 import {LitElement, html} from '@polymer/lit-element';
 
 export default class OrWeb3Base extends LitElement {
+  constructor() {
+    super();
+    this.addEventListener('web3-ready', e => this.setWeb3(e));
+    this.addEventListener('web3-account', e => this.setAccount(e));
+    this.accountReady = new Promise((resolve, reject) => {
+      this.resolveAccount = resolve;
+    });
+  }
   ready() {
     super.ready();
     this.dispatchEvent(new CustomEvent('web3-child', {detail: {element: this}, bubbles: true, composed: true}));
-    this.addEventListener('set-web3', e => this.setWeb3(e));
   }
   setWeb3(e) {
+    console.log("setWeb3", e)
     this.web3 = e.detail.web3;
     this.account = e.detail.account;
+    this.web3Updated();
   }
+  setAccount(e) {
+    this.account = e.detail.account;
+    this.resolveAccount(this.account);
+    this.accountReady = Promise.resolve(this.account);
+    this.web3Updated();
+  }
+  web3Updated() {}
 }

@@ -6,21 +6,25 @@ export default class OrSRA extends OrWeb3 {
   static get properties() {
     return super.properties.extend({
       sra: String,
+      feeRecipient: String,
     });
   }
   constructor() {
     super();
     this.sraChildren = [];
-    this.sra = this.sra || "https://api.openrelay.xyz/"
+    this.sra = "https://api.openrelay.xyz/";
+    this.feeRecipient = "0xc22d5b2951db72b44cfb8089bb8cd374a3c354ea";
     this.addEventListener('sra-child', e => this.registerSRAChild(e));
   }
   registerSRAChild(e) {
-    this.web3Children.push(e.detail.element);
-    this.dispatchEvent(new CustomEvent('sra-ready', {detail: {sra: this.sra}, bubbles: false, composed: false}));
+    this.sraChildren.push(e.detail.element);
+    e.detail.element.dispatchEvent(new CustomEvent('sra-ready', {detail: {sra: this.sra, feeRecipient: this.feeRecipient}, bubbles: false, composed: false}));
   }
   _didRender(props, changedProps, prevProps) {
-    if(props.sra != prevProps.sra) {
-      this.dispatchEvent(new CustomEvent('sra-ready', {detail: {sra: this.sra}, bubbles: false, composed: false}));
+    if(props.sra != prevProps.sra || props.feeRecipient != prevProps.feeRecipient) {
+      for(var child of this.sraChildren) {
+        child.dispatchEvent(new CustomEvent('sra-ready', {detail: {sra: this.sra, feeRecipient: this.feeRecipient}, bubbles: false, composed: false}));
+      }
     }
     return super._didRender(props, changedProps, prevProps);
   }

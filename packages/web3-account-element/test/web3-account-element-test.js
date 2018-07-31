@@ -4,7 +4,7 @@ import {getFakeWeb3} from "@openrelay/element-test-utils";
 import {assert} from "chai";
 
 
-describe('<or-web3>', () => {
+describe('<or-web3-account>', () => {
   var testArea;
   before(() => {
     testArea = document.createElement("div");
