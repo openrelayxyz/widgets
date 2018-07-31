@@ -9,9 +9,18 @@ export default class OrWeb3 extends LitElement {
       return html`<slot name="noweb3">You need web3 to view this content</slot>`;
     }
   }
-  static get properties() { return {hasWeb3: Boolean, accountCheckInterval: {type: Number, value: 2000} }}
-  ready() {
-    super.ready();
+  static get properties() { return {
+    hasWeb3: Boolean,
+    accountCheckInterval: {type: Number, value: 2000},
+    extend: function(props) {
+      for(var key of Object.keys(this)) {
+        props[key] = this[key];
+      }
+      return props;
+    }
+  }}
+  constructor() {
+    super();
     this.web3Children = [];
     this.addEventListener('web3-child', e => this.registerChild(e));
     this.addEventListener('set-web3', e => this.setWeb3(e.detail.web3));

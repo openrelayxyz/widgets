@@ -1,0 +1,27 @@
+{
+  "name": "@openrelay/sra-base",
+  "version": "0.1.0",
+  "description": "A base class for creating lit-elements that depend on the web3-element",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "lit-element",
+    "openrelay",
+    "web3",
+    "0x"
+  ],
+  "devDependencies": {
+    "rollup": "^0.63.2",
+    "rollup-plugin-commonjs": "^9.1.3",
+    "rollup-plugin-json": "^3.0.0",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-resolve": "^3.3.0"
+  },
+  "author": "OpenRelay LLC",
+  "license": "LGPL-3.0",
+  "dependencies": {
+    "@polymer/lit-element": "^0.5.2"
+  }
+}
