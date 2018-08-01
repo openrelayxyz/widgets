@@ -1,4 +1,4 @@
-import {LitElement, html} from '@polymer/lit-element';
+import {html} from '@polymer/lit-element';
 import OrWeb3Base from '@openrelay/web3-base';
 
 export default class OrWeb3Account extends OrWeb3Base {

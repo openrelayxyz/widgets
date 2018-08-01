@@ -14,7 +14,6 @@ export default class OrWeb3Base extends LitElement {
     this.dispatchEvent(new CustomEvent('web3-child', {detail: {element: this}, bubbles: true, composed: true}));
   }
   setWeb3(e) {
-    console.log("setWeb3", e)
     this.web3 = e.detail.web3;
     this.account = e.detail.account;
     this.web3Updated();

@@ -9,7 +9,7 @@ import * as RpcSubprovider from 'web3-provider-engine/subproviders/rpc';
 import Web3 from 'web3';
 
 
-export function getFakeWeb3() {
+export function getFakeWeb3(coreWallet) {
 
   var engine = new ProviderEngine()
   var web3 = new Web3(engine)
@@ -34,11 +34,13 @@ export function getFakeWeb3() {
 
 
   // id mgmt
-  engine.addProvider(new HookedWalletSubprovider({
-    getAccounts: function(cb){ cb(null, ["0xf00df00df00df00df00df00df00df00df00df00d"]) },
-    approveTransaction: function(cb){ cb("not implemented") },
-    signTransaction: function(cb){ cb("not implemented") },
-  }))
+  if(!coreWallet) {
+    engine.addProvider(new HookedWalletSubprovider({
+      getAccounts: function(cb){ cb(null, ["0xf00df00df00df00df00df00df00df00df00df00d"]) },
+      approveTransaction: function(cb){ cb("not implemented") },
+      signTransaction: function(cb){ cb("not implemented") },
+    }))
+  }
 
   // data source
   engine.addProvider(new RpcSubprovider({
