@@ -12,9 +12,13 @@ export default class OrSRAFee extends OrSRABase {
       takerFeeDecimal = this.web3.fromWei(this.takerFee, "ether").toString();
     }
     return html`
-      <div style="display: inline-block; width: 36px;" id="maker-fee">${makerFeeDecimal}</div>
-      <input disabled="${disabled}" type="range" min="0" max="100" value="${value}"></input>
-      <div style="display: inline-block; width: 36px;" id="taker-fee">${takerFeeDecimal}</div>
+      <div style="display: grid; grid-template-columns: 40px auto 40px">
+        <div style="grid-column-start: 1;">Maker</div>
+        <div style="grid-column-start: 3;">Taker</div>
+        <div style="grid-column-start: 1" id="maker-fee">${makerFeeDecimal}</div>
+        <input style="grid-column-start: 2" disabled="${disabled}" type="range" min="0" max="100" value="${value}"></input>
+        <div style="grid-column-start: 3" id="taker-fee">${takerFeeDecimal}</div>
+      </div>
       `;
   }
   constructor() {
