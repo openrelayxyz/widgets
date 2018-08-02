@@ -70,9 +70,12 @@ export default class OrTokenSelect extends OrWeb3Base {
     this.dispatch();
   }
   dispatch() {
-    this.dispatchEvent(new CustomEvent('token-selected', {
+    this.dispatchEvent(new CustomEvent('change', {
       detail: {token: this.selectedToken}, bubbles: false, composed: false
     }));
+  }
+  get value() {
+    return this.selectedToken;
   }
 }
 

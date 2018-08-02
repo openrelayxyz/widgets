@@ -25,7 +25,7 @@ describe('<or-token-select>', () => {
       assert.isAtLeast(testElement.shadowRoot.querySelectorAll("option").length, 100);
     });
   });
-  it('should emit a change event that bubbles up', () => {
+  it('should emit a change event', () => {
     testArea.innerHTML = '<or-web3 id="fixture">Content <or-token-select id="test-element"></or-token-select></or-web3>';
     var web3 = getFakeWeb3();
     document.getElementById("fixture").dispatchEvent(
@@ -33,7 +33,7 @@ describe('<or-token-select>', () => {
     );
     var testElement = document.getElementById('test-element')
     var eventPromise = new Promise((resolve, reject) => {
-      document.getElementById("fixture").addEventListener("token-selected", (e) => {
+      document.getElementById("test-element").addEventListener("change", (e) => {
         assert.equal(e.detail.token.symbol, testElement.tokens[0].symbol);
         assert.equal(e.detail.token.decimals, testElement.tokens[0].decimals);
         assert.equal(e.detail.token.address, testElement.tokens[0].address);

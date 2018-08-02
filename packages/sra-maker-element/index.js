@@ -78,26 +78,16 @@ export default class OrSRAMaker extends OrSRABase {
   ready() {
     super.ready();
     let shadowRoot = this.shadowRoot;
-    shadowRoot.querySelector("#maker-asset").addEventListener("token-selected", (e) => {
-      this.makerAsset = e.detail.token;
-    });
-    shadowRoot.querySelector("#taker-asset").addEventListener("token-selected", (e) => {
-      this.takerAsset = e.detail.token;
-    });
+    this.bindToValue("#maker-asset", "makerAsset");
+    this.bindToValue("#taker-asset", "takerAsset");
+    this.bindToValue("#maker-asset-quantity", "makerAssetQuantity");
+    this.bindToValue("#asking-price", "askingPrice");
+    this.bindToValue("#expiration-date-time", "expirationDateTime", x => new Date(x));
     shadowRoot.querySelector("#fee").addEventListener("change", (e) => {
       this.makerFee = e.detail.makerFee;
       this.takerFee = e.detail.takerFee;
       this.feeRecipient = e.detail.feeRecipient;
     });
-    shadowRoot.querySelector("#maker-asset-quantity").addEventListener("change", (e) => {
-      this.makerAssetQuantity = shadowRoot.querySelector("#maker-asset-quantity").value;
-    })
-    shadowRoot.querySelector("#asking-price").addEventListener("change", (e) => {
-      this.askingPrice = shadowRoot.querySelector("#asking-price").value;
-    })
-    shadowRoot.querySelector("#expiration-date-time").addEventListener("change", (e) => {
-      this.expirationDateTime = new Date(shadowRoot.querySelector("#expiration-date-time").value);
-    })
   }
   static get properties() {
     return {

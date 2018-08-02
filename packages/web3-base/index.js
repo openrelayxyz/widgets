@@ -24,5 +24,11 @@ export default class OrWeb3Base extends LitElement {
     this.accountReady = Promise.resolve(this.account);
     this.web3Updated();
   }
+  bindToValue(selector, property, transform) {
+    transform = transform || (x => x);
+    this.shadowRoot.querySelector(selector).addEventListener("change", (e) => {
+      this[property] = transform(this.shadowRoot.querySelector(selector).value);
+    })
+  }
   web3Updated() {}
 }
