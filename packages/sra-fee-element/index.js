@@ -104,7 +104,7 @@ export default class OrSRAFee extends OrSRABase {
       }
     }
     this._lastFeeRequest = body;
-    if(change) {
+    if(change || !this.totalFee) {
       request({url: this.sra + "v1/fees", method: "post", body: JSON.stringify(body) }).then((result) => {
         var feeBody = JSON.parse(result);
         if(feeBody.feeRecipient != this.feeRecipient) {

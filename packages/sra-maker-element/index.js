@@ -51,7 +51,16 @@ export default class OrSRAMaker extends OrSRABase {
           "review review review";
         grid-template-rows: auto atuo auto;
         display: grid;
-      };
+        border: solid;
+      }
+      h2 {
+        font-size: 10pt;
+        -webkit-margin-before: 0.2em;
+        -webkit-margin-after: 0.2em;
+      }
+      div {
+        font-size: 8pt;
+      }
       </style>
       <div id="maker-grid">${result}</div>
     `;
@@ -59,10 +68,11 @@ export default class OrSRAMaker extends OrSRABase {
   constructor() {
     super();
     this.i18n = (t) => {
-      if(!document.querySelector("html").lang) {
+      let lang = this.lang || document.querySelector("html").lang
+      if(!lang) {
         return t;
       }
-      let dictionary = i18n[document.querySelector("html").lang];
+      let dictionary = i18n[lang];
       if(!dictionary) {
         return t;
       } else {
@@ -99,6 +109,7 @@ export default class OrSRAMaker extends OrSRABase {
       makerAssetQuantity: Number,
       askingPrice: String,
       expirationDateTime: Date,
+      lang: String,
     };
   }
 }

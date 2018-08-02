@@ -8,8 +8,8 @@ export default class OrSRABase extends OrWeb3Base {
   }
   ready() {
     super.ready();
-    this.dispatchEvent(new CustomEvent('sra-child', {detail: {element: this}, bubbles: true, composed: true}));
     this.addEventListener('sra-ready', e => this.setSRA(e));
+    setTimeout(() => this.dispatchEvent(new CustomEvent('sra-child', {detail: {element: this}, bubbles: true, composed: true})));
     this.sraUpdated();
   }
   setSRA(e) {
