@@ -43,6 +43,16 @@ export default class OrSRAFee extends OrSRABase {
       */
       this.value = e.target.value;
     });
+    this.shadowRoot.querySelector("input").addEventListener("change", (e) => {
+      this.emitChange();
+    });
+  }
+  emitChange() {
+    this.dispatchEvent(new CustomEvent("change", {detail: {
+      feeRecipient: this.feeRecipient,
+      makerFee: this.makerFee,
+      takerFee: this.takerFee,
+    }, bubbles: false, composed: false}));
   }
   get takerFee() {
     if(this.totalFee.mul && this.value !== undefined) {
