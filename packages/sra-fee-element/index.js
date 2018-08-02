@@ -89,6 +89,9 @@ export default class OrSRAFee extends OrSRABase {
       this.refreshFee();
     })
   }
+  _didRender(props, changed, prevProps) {
+    this.refreshFee();
+  }
   refreshFee() {
     var body = {};
     var change = false;
