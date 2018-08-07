@@ -1,5 +1,6 @@
 import {bigNumberToBuffer} from '@openrelay/element-utilities';
 import {trim} from '@openrelay/element-utilities';
+import {addressValidOrThrow, numberValidOrThrow, assetDataValidOrThrow} from '@openrelay/element-utilities/validations.js';
 
 export default class UnsignedOrder {
   constructor(order, web3) {
@@ -7,21 +8,22 @@ export default class UnsignedOrder {
     if(!this.web3) {
       throw "Web3 not found. Please provide one.";
     }
-    this.exchangeAddress = order.exchangeAddress;
-    this.expirationTimeSeconds = web3.toBigNumber(order.expirationTimeSeconds);
-    this.feeRecipientAddress = order.feeRecipientAddress;
-    this.makerAddress = order.makerAddress;
-    this.makerAssetAmount = web3.toBigNumber(order.makerAssetAmount);
-    this.makerAssetData = order.makerAssetData;
-    this.makerFee = web3.toBigNumber(order.makerFee);
-    this.salt = web3.toBigNumber(order.salt);
-    this.senderAddress = order.senderAddress;
-    this.takerAddress = order.takerAddress;
-    this.takerAssetAmount = web3.toBigNumber(order.takerAssetAmount);
-    this.takerAssetData = order.takerAssetData;
-    this.takerFee = web3.toBigNumber(order.takerFee);
+    console.log(order);
+    this.exchangeAddress = addressValidOrThrow(order.exchangeAddress);
+    this.expirationTimeSeconds = numberValidOrThrow(this.web3.toBigNumber(order.expirationTimeSeconds));
+    this.feeRecipientAddress = addressValidOrThrow(order.feeRecipientAddress);
+    this.makerAddress = addressValidOrThrow(order.makerAddress);
+    this.makerAssetAmount = numberValidOrThrow(this.web3.toBigNumber(order.makerAssetAmount));
+    this.makerAssetData = assetDataValidOrThrow(order.makerAssetData);
+    this.makerFee = numberValidOrThrow(this.web3.toBigNumber(order.makerFee));
+    this.salt = numberValidOrThrow(this.web3.toBigNumber(order.salt));
+    this.senderAddress = addressValidOrThrow(order.senderAddress);
+    this.takerAddress = addressValidOrThrow(order.takerAddress);
+    this.takerAssetAmount = numberValidOrThrow(this.web3.toBigNumber(order.takerAssetAmount));
+    this.takerAssetData = assetDataValidOrThrow(order.takerAssetData);
+    this.takerFee = numberValidOrThrow(this.web3.toBigNumber(order.takerFee));
   }
-  hash() {
+  get hash() {
     let domainSchemaSha = this.web3.sha3("DomainSeparator(address contract)");
     let orderSchemaSha = this.web3.sha3("Order(address makerAddress,address takerAddress,address feeRecipientAddress,address senderAddress,uint256 makerAssetAmount,uint256 takerAssetAmount,uint256 makerFee,uint256 takerFee,uint256 expirationTimeSeconds,uint256 salt,bytes makerAssetData,bytes takerAssetData,)");
     let exchangeSha = this.web3.sha3(this.exchangeAddress, {encoding: "hex"});

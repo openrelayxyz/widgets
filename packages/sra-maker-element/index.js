@@ -3,6 +3,7 @@ import OrSRABase from '@openrelay/sra-base';
 import i18n from '@openrelay/sra-maker-element/i18n.json';
 import '@openrelay/token-select-element';
 import '@openrelay/sra-fee-element';
+import UnsignedOrder from '@openrelay/element-utilities/unsignedorder';
 
 export default class OrSRAMaker extends OrSRABase {
   static get is() { return "or-sra-maker" };
@@ -99,26 +100,30 @@ export default class OrSRAMaker extends OrSRABase {
       this.feeRecipient = e.detail.feeRecipient;
     });
   }
-  static get value() {
-    // TODO: Double check
-    let makerAssetAmount = this.web3.toBigNumber(10).pow(this.makerAsset.decimals).mul(this.makerAssetQuantity);
-    // decimalAdjustedPrice = askingPrice * (10 ** makerDecimal) / (10 ** takerDecimal)
-    let decimalAdjustedPrice = this.web3.toBigNumber(this.askingPrice).mul(this.web3.toBigNumber(10).pow(this.makerAsset.decimals).div(this.web3.toBigNumber(10).pow(this.takerAsset.decimals)));
-    let takerAssetAmount = decimalAdjustedPrice.mul(makerAssetAmount);
-    return {
-      exchangeAddress: this.exchangeAddress,
-      expirationTimeSeconds: parseInt(this.expirationDateTime.getTime() / 1000),
-      feeRecipientAddress: this.feeRecipient,
-      makerAddress: this.account,
-      makerAssetAmount: makerAssetAmount;
-      makerAssetData: `0xf47261b0000000000000000000000000${this.makerAsset.address.slice(2)}`,
-      makerFee: this.makerFee,
-      salt: this.epoch,
-      senderAddress: "0x0000000000000000000000000000000000000000", // TODO: Get this from the fee element
-      takerAddress: "0x0000000000000000000000000000000000000000",  // TODO: Get this from the fee element
-      takerAssetAmount: takerAssetAmount,
-      takerAssetData: `0xf47261b0000000000000000000000000${this.takerAsset.address.slice(2)}`,
-      takerFee:= this.takerFee,
+  get value() {
+    try {
+      // TODO: Double check takerAssetAmount calculation
+      let makerAssetAmount = this.web3.toBigNumber(10).pow(this.makerAsset.decimals).mul(this.makerAssetQuantity);
+      // decimalAdjustedPrice = askingPrice * (10 ** makerDecimal) / (10 ** takerDecimal)
+      let decimalAdjustedPrice = this.web3.toBigNumber(this.askingPrice).mul(this.web3.toBigNumber(10).pow(this.makerAsset.decimals).div(this.web3.toBigNumber(10).pow(this.takerAsset.decimals)));
+      let takerAssetAmount = decimalAdjustedPrice.mul(makerAssetAmount);
+      return new UnsignedOrder({
+        exchangeAddress: this.exchangeAddress,
+        expirationTimeSeconds: parseInt(this.expirationDateTime.getTime() / 1000),
+        feeRecipientAddress: this.feeRecipient,
+        makerAddress: this.account,
+        makerAssetAmount: makerAssetAmount,
+        makerAssetData: `0xf47261b0000000000000000000000000${this.makerAsset.address.slice(2)}`,
+        makerFee: this.makerFee,
+        salt: this.epoch,
+        senderAddress: "0x0000000000000000000000000000000000000000", // TODO: Get this from the fee element
+        takerAddress: "0x0000000000000000000000000000000000000000",  // TODO: Get this from the fee element
+        takerAssetAmount: takerAssetAmount,
+        takerAssetData: `0xf47261b0000000000000000000000000${this.takerAsset.address.slice(2)}`,
+        takerFee: this.takerFee,
+      });
+    } catch (e) {
+      return null;
     }
   }
   static get properties() {
