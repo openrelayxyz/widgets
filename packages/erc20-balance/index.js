@@ -35,6 +35,12 @@ export default class OrERC20Balance extends OrWeb3Base {
   ready() {
     super.ready();
     this._useAccount = !this.address;
+    if(this.refresh) {
+      this.onBlock(() => {
+        // Refresh the balance on new blocks
+        this.updateBalance();
+      });
+    }
   }
   web3Updated() {
     this._tokenContract = this.web3.eth.contract(erc20ABI).at(this.token);
@@ -43,12 +49,6 @@ export default class OrERC20Balance extends OrWeb3Base {
         this._divisor = this.web3.toBigNumber(10).pow(decimals);
       }
     });
-    clearInterval(this._updateInterval);
-    if(this.refresh) {
-      this._updateInterval = setInterval(() => {
-        this.updateBalance()
-      }, 1000);
-    }
     this.updateBalance();
   }
   updateBalance() {

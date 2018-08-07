@@ -49,7 +49,7 @@ export default class OrSRAMaker extends OrSRABase {
           "expiration-date-time expiration-date-time expiration-date-time"
           "review-header review-header review-header"
           "review review review";
-        grid-template-rows: auto atuo auto;
+        grid-template-rows: auto auto auto;
         display: grid;
         border: solid;
       }
@@ -98,6 +98,28 @@ export default class OrSRAMaker extends OrSRABase {
       this.takerFee = e.detail.takerFee;
       this.feeRecipient = e.detail.feeRecipient;
     });
+  }
+  static get value() {
+    // TODO: Double check
+    let makerAssetAmount = this.web3.toBigNumber(10).pow(this.makerAsset.decimals).mul(this.makerAssetQuantity);
+    // decimalAdjustedPrice = askingPrice * (10 ** makerDecimal) / (10 ** takerDecimal)
+    let decimalAdjustedPrice = this.web3.toBigNumber(this.askingPrice).mul(this.web3.toBigNumber(10).pow(this.makerAsset.decimals).div(this.web3.toBigNumber(10).pow(this.takerAsset.decimals)));
+    let takerAssetAmount = decimalAdjustedPrice.mul(makerAssetAmount);
+    return {
+      exchangeAddress: this.exchangeAddress,
+      expirationTimeSeconds: parseInt(this.expirationDateTime.getTime() / 1000),
+      feeRecipientAddress: this.feeRecipient,
+      makerAddress: this.account,
+      makerAssetAmount: makerAssetAmount;
+      makerAssetData: `0xf47261b0000000000000000000000000${this.makerAsset.address.slice(2)}`,
+      makerFee: this.makerFee,
+      salt: this.epoch,
+      senderAddress: "0x0000000000000000000000000000000000000000", // TODO: Get this from the fee element
+      takerAddress: "0x0000000000000000000000000000000000000000",  // TODO: Get this from the fee element
+      takerAssetAmount: takerAssetAmount,
+      takerAssetData: `0xf47261b0000000000000000000000000${this.takerAsset.address.slice(2)}`,
+      takerFee:= this.takerFee,
+    }
   }
   static get properties() {
     return {
