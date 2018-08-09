@@ -122,6 +122,7 @@ export default class OrSRAFee extends OrSRABase {
           this.totalFee = this.web3.toBigNumber(this._initialTotalFee);
         }
         this._resolveFee();
+        this.emitChange();
       }).catch((error) => {
         console.log(error);
         this.dispatchEvent(new CustomEvent('sra-fee-error', {error: error, bubbles: true, composed: true}));
