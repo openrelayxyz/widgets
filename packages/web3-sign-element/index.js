@@ -16,6 +16,10 @@ export default class OrWeb3Sign extends OrWeb3Base {
         }
         let signature = ethjsutil.toBuffer(result);
         let v = signature[64];
+        if(v < 27) {
+          // Some clients return v={0,1} instead of v={27,28}
+          v += 27;
+        }
         let r = signature.slice(0, 32);
         let s = signature.slice(32, 64);
         var msgBuffer = ethjsutil.toBuffer(this.message);
@@ -26,10 +30,10 @@ export default class OrWeb3Sign extends OrWeb3Base {
           // non-prefixed message matches EIP712
           // Some web3 clients return v, s, r instead of v, r, s, so we try both
           this.dispatch(null, v, s, r, 2);
-        } else if (this.account == this._recover(Buffer.concat([ethjsutil.toBuffer("\x19Ethereum Signed Message:\n32"), msgBuffer]), v, r, s)) {
+        } else if (this.account == this._recover(this._prefixedMsg(msgBuffer), v, r, s)) {
           // Prefixed message matches ethsign
           this.dispatch(null, v, r, s, 3);
-        } else if (this.account == this._recover(Buffer.concat([ethjsutil.toBuffer("\x19Ethereum Signed Message:\n32"), msgBuffer]), v, s, r)) {
+        } else if (this.account == this._recover(this._prefixedMsg(msgBuffer), v, s, r)) {
           // Prefixed message matches ethsign
           // Some web3 clients return v, s, r instead of v, r, s, so we try both
           this.dispatch(null, v, s, r, 3);
@@ -39,10 +43,21 @@ export default class OrWeb3Sign extends OrWeb3Base {
       });
     });
   }
+  _prefixedMsg(msgBuffer) {
+    return ethjsutil.toBuffer(ethjsutil.keccak256(Buffer.concat([ethjsutil.toBuffer("\x19Ethereum Signed Message:\n32"), msgBuffer])));
+  }
   _recover(msg, v, r, s) {
-    return ethjsutil.bufferToHex(ethjsutil.pubToAddress(ethjsutil.ecrecover(msg, v, r, s)));
+    try {
+      let x = ethjsutil.bufferToHex(ethjsutil.pubToAddress(ethjsutil.ecrecover(msg, v, r, s)));
+      console.log(x);
+      return x;
+    } catch (e) {
+      console.log(e);
+      return "badsignature";
+    }
   }
   dispatch(err, v, r, s, sigType) {
+    console.log("Dispatch called:", err)
     if(err) {
       this.dispatchEvent(new CustomEvent('sign', {detail: {error: err}, bubbles: true, composed: true}));
       return;
