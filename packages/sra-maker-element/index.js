@@ -2,8 +2,10 @@ import {LitElement, html} from '@polymer/lit-element';
 import OrSRABase from '@openrelay/sra-base';
 import i18n from '@openrelay/sra-maker-element/i18n.json';
 import '@openrelay/token-select-element';
+import '@openrelay/web3-sign-element';
 import '@openrelay/sra-fee-element';
 import UnsignedOrder from '@openrelay/element-utilities/unsignedorder';
+import request from "@openrelay/element-utilities/request";
 
 export default class OrSRAMaker extends OrSRABase {
   static get is() { return "or-sra-maker" };
@@ -22,6 +24,7 @@ export default class OrSRAMaker extends OrSRABase {
       html`<input style="grid-area: expiration-date-time;" id="expiration-date-time" type="datetime-local" min="${new Date().toISOString().split(".")[0]}"></input>`,
     ];
     if(makerAssetQuantity && makerAsset && takerAsset && expirationDateTime) {
+      let hash = this.value.hash;
       result.push(html`<h2 style="grid-area: review-header;">${i18n("Review your offer and post your order")}</h2>`);
       result.push(
         html`
@@ -30,7 +33,9 @@ export default class OrSRAMaker extends OrSRABase {
         ${i18n("for")} ${takerAsset.symbol} ${i18n("at an asking price of")}
         ${askingPrice} ${takerAsset.symbol} per ${makerAsset.symbol}.
         ${i18n("Your offer is set to expire on")} ${expirationDateTime.toLocaleDateString()} ${i18n("at")} ${expirationDateTime.toLocaleTimeString()}
-        </div>`
+        </div>
+        <or-web3-sign id="signature" style="grid-area: sign;" message="${hash}"></or-web3-sign>
+        `
       );
     }
 
@@ -49,7 +54,8 @@ export default class OrSRAMaker extends OrSRABase {
           "expiration-header expiration-header expiration-header"
           "expiration-date-time expiration-date-time expiration-date-time"
           "review-header review-header review-header"
-          "review review review";
+          "review review review"
+          ". sign .";
         grid-template-rows: auto auto auto;
         display: grid;
         border: solid;
@@ -99,8 +105,25 @@ export default class OrSRAMaker extends OrSRABase {
       this.takerFee = e.detail.takerFee;
       this.feeRecipient = e.detail.feeRecipient;
     });
+    this.addEventListener("sign", (e) => {
+      this.signature = e.detail.signature;
+      var body = this.value;
+      body.signature = this.signature;
+      body.web3 = undefined;
+      console.log(body);
+      request({
+        url: this.sra + "v1/fees",
+        method: "POST",
+        body: JSON.stringify(body),
+      }).then((result) => {
+        console.log("Posted");
+      }).catch((error) => {
+        console.log(error);
+      });
+    });
   }
   get value() {
+    this.error = undefined;
     try {
       // TODO: Double check takerAssetAmount calculation
       let makerAssetAmount = this.web3.toBigNumber(10).pow(this.makerAsset.decimals).mul(this.makerAssetQuantity);
@@ -123,6 +146,9 @@ export default class OrSRAMaker extends OrSRABase {
         takerFee: this.takerFee,
       });
     } catch (e) {
+      // Some values aren't set yet and validation will fail. We don't need to
+      // error out, we just don't have a value yet.
+      this.error = e;
       return null;
     }
   }
@@ -136,6 +162,7 @@ export default class OrSRAMaker extends OrSRABase {
       makerAssetQuantity: Number,
       askingPrice: String,
       expirationDateTime: Date,
+      signature: String,
       lang: String,
     };
   }
