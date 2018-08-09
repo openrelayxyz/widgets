@@ -32,17 +32,20 @@ describe('<or-token-select>', () => {
       new CustomEvent('set-web3', {detail: {web3: web3}, bubbles: false, composed: false})
     );
     var testElement = document.getElementById('test-element')
-    var eventPromise = new Promise((resolve, reject) => {
-      document.getElementById("test-element").addEventListener("change", (e) => {
-        assert.equal(e.detail.token.symbol, testElement.tokens[0].symbol);
-        assert.equal(e.detail.token.decimals, testElement.tokens[0].decimals);
-        assert.equal(e.detail.token.address, testElement.tokens[0].address);
-        assert.equal(e.detail.token.symbol, testElement.selectedSymbol);
-        assert.equal(testElement.selectedIndex, 0);
-        resolve();
+    var eventPromise = testElement.initialized.then(() => {
+      testElement.setToken(0);
+    }).then(() => {
+      return new Promise((resolve, reject) => {
+        document.getElementById("test-element").addEventListener("change", (e) => {
+          assert.equal(e.detail.token.symbol, testElement.tokens[0].symbol);
+          assert.equal(e.detail.token.decimals, testElement.tokens[0].decimals);
+          assert.equal(e.detail.token.address, testElement.tokens[0].address);
+          assert.equal(e.detail.token.symbol, testElement.selectedSymbol);
+          assert.equal(testElement.selectedIndex, 0);
+          resolve();
+        });
       })
     });
-    testElement.setToken(0);
     return eventPromise;
   });
   it('should select the indicated token by index', () => {
@@ -79,8 +82,6 @@ describe('<or-token-select>', () => {
     );
     var testElement = document.getElementById('test-element')
     return testElement.initialized.then(() => {
-      return testElement.renderComplete;
-    }).then(() => {
       assert.isNotOk(testElement.selectedToken);
       assert.equal(testElement.shadowRoot.querySelectorAll("option").length, 17);
     });

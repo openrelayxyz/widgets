@@ -36,13 +36,23 @@ export default class OrTokenSelect extends OrWeb3Base {
         this.initializeSelected();
       });
     } else {
-      this.initialized = Promise.resolve(null);
-      this.tokens = tokenList;
-      this.initializeSelected();
+      this.initialized = new Promise((resolve, reject) => {
+        this._initializeResolve = resolve;
+      });
     }
     this.shadowRoot.querySelector("select").addEventListener("change", (e) => {
       this.setToken(e.target.selectedIndex - 1);
     });
+  }
+  web3Updated() {
+    if(!this.tokenListUrl) {
+      this.initialized = Promise.resolve(null);
+      // Get the current network if we have a token list, or show mainnet
+      // tokens if we're on an unknown network.
+      this.tokens = tokenList[this.network] || tokenList["1"];
+      this.initializeSelected();
+      this._initializeResolve();
+    }
   }
   initializeSelected() {
     if (this.selectedSymbol) {
