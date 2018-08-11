@@ -2,12 +2,14 @@ import {LitElement, html} from '@polymer/lit-element';
 
 export default class OrWeb3 extends LitElement {
   static get is() { return "or-web3" };
-  _render({hasWeb3, networkSupported}) {
+  _render({hasWeb3, networkSupported, topAccount}) {
     if(hasWeb3) {
-      if(networkSupported) {
+      if(networkSupported && topAccount) {
         return html`<slot></slot>`;
-      } else {
+      } else if (!networkSupported) {
         return html`<slot name="netunsupported">This application does not support the network you are connected to</slot>`;
+      } else {
+        return html`<slot name="locked">Please unlock your web3 client</slot>`;
       }
     } else {
       return html`<slot name="noweb3">You need web3 to view this content</slot>`;
@@ -19,6 +21,7 @@ export default class OrWeb3 extends LitElement {
     networkSupported: Boolean,
     networkCheckInterval: Number,
     accountCheckInterval: Number,
+    topAccount: String,
     extend: function(props) {
       for(var key of Object.keys(this)) {
         props[key] = this[key];
