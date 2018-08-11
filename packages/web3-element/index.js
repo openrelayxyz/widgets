@@ -2,10 +2,13 @@ import {LitElement, html} from '@polymer/lit-element';
 
 export default class OrWeb3 extends LitElement {
   static get is() { return "or-web3" };
-  _render({hasWeb3}) {
-    // TODO: Consider how to handle limited network support
+  _render({hasWeb3, networkSupported}) {
     if(hasWeb3) {
-      return html`<slot></slot>`;
+      if(networkSupported) {
+        return html`<slot></slot>`;
+      } else {
+        return html`<slot name="netunsupported">This application does not support the network you are connected to</slot>`;
+      }
     } else {
       return html`<slot name="noweb3">You need web3 to view this content</slot>`;
     }
@@ -13,6 +16,7 @@ export default class OrWeb3 extends LitElement {
   static get properties() { return {
     hasWeb3: Boolean,
     network: Number,
+    networkSupported: Boolean,
     networkCheckInterval: Number,
     accountCheckInterval: Number,
     extend: function(props) {
@@ -102,6 +106,7 @@ export default class OrWeb3 extends LitElement {
   }
   setNetwork(network) {
     this.network = network;
+    this.networkSupported = this.supportedNetworks.length == 0 || this.supportedNetworks.indexOf(parseInt(this.network)) > -1;
     this._resolveNetwork(this.network);
     for(var child of this.web3Children) {
       child.dispatchEvent(new CustomEvent('web3-network', {detail: {network: this.network}, bubbles: false, composed: false}));
@@ -131,6 +136,13 @@ export default class OrWeb3 extends LitElement {
     for(var child of this.web3Children) {
       child.dispatchEvent(new CustomEvent('web3-account', {detail: {account: this.topAccount}, bubbles: false, composed: false}));
     }
+  }
+  get supportedNetworks() {
+    let supportedNetworks = [];
+    for(let slot of this.querySelectorAll('[slot="net"]')) {
+      supportedNetworks.push(parseInt(slot.innerText));
+    }
+    return supportedNetworks;
   }
 }
 window.customElements.define(OrWeb3.is, OrWeb3)
