@@ -2,7 +2,10 @@ import {LitElement, html} from '@polymer/lit-element';
 
 export default class OrWeb3 extends LitElement {
   static get is() { return "or-web3" };
-  _render({hasWeb3, networkSupported, topAccount}) {
+  _render({hasWeb3, networkSupported, topAccount, loaded}) {
+    if(!loaded) {
+      return html`<span id="web3-loading"></span>`;
+    }
     if(hasWeb3) {
       if(networkSupported && topAccount) {
         return html`<slot></slot>`;
@@ -22,6 +25,7 @@ export default class OrWeb3 extends LitElement {
     networkCheckInterval: Number,
     accountCheckInterval: Number,
     topAccount: String,
+    loaded: Boolean,
     extend: function(props) {
       for(var key of Object.keys(this)) {
         props[key] = this[key];
@@ -38,6 +42,7 @@ export default class OrWeb3 extends LitElement {
     this.addEventListener('set-web3', e => this.setWeb3(e.detail.web3));
     this.addEventListener('subscribe-block', e => this.registerBlockSubscription(e));
     this.hasWeb3 = false;
+    this.loaded = false;
     this.topAccount = null;
     this.network = null;
     this.blockWatcher = null;
@@ -50,6 +55,7 @@ export default class OrWeb3 extends LitElement {
         this.setWeb3(window.web3);
       }
     }, 100)
+    setTimeout(() => { this.loaded = true; }, 250);
   }
   registerChild(e) {
     if(this.web3Children.indexOf(e.detail.element) == -1) {
@@ -80,6 +86,7 @@ export default class OrWeb3 extends LitElement {
     });
   }
   setWeb3(web3) {
+    this.loaded = true;
     this.hasWeb3 = true;
     this.web3 = new Web3(web3.currentProvider);
     clearInterval(this.web3Interval);
