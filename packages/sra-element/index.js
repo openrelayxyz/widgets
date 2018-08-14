@@ -33,19 +33,41 @@ export default class OrSRA extends OrWeb3 {
   }
   registerSRAChild(e) {
     this.sraChildren.push(e.detail.element);
-    e.detail.element.dispatchEvent(new CustomEvent('sra-ready', {detail: {sra: this.sra, feeRecipient: this.feeRecipient, epoch: this.epoch}, bubbles: false, composed: false}));
+    this._dispatch(e.detail.element);
   }
   _didRender(props, changedProps, prevProps) {
     if(props.sra != prevProps.sra || props.feeRecipient != prevProps.feeRecipient || props.network != prevProps.network || props.epoch != prevProps.epoch) {
       for(var child of this.sraChildren) {
-        child.dispatchEvent(new CustomEvent('sra-ready', {detail: {sra: this.sra, feeRecipient: this.feeRecipient, exchangeAddress: this.exchangeAddress}, bubbles: false, composed: false}));
+        this._dispatch(child);
       }
     }
     return super._didRender(props, changedProps, prevProps);
   }
+  _dispatch(element) {
+    element.dispatchEvent(new CustomEvent('sra-ready', {detail: {
+        sra: this.sra,
+        feeRecipient: this.feeRecipient,
+        exchangeAddress: this.exchangeAddress,
+        feeTokenAddress: this.feeTokenAddress,
+        wethAddress: this.wethAddress,
+        epoch: this.epoch,
+    }, bubbles: false, composed: false}));
+  }
   get exchangeAddress() {
     return this.exchange || ({
       "42": "0xb65619b82c4d385de0c5b4005452c2fdee0f86d1",
+    })[this.network];
+  }
+  get feeTokenAddress() {
+    return this.exchange || ({
+      "1": "0xe41d2489571d322189246dafa5ebde1f4699f498",
+      "42": "0x6ff6c0ff1d68b964901f986d4c9fa3ac68346570",
+    })[this.network];
+  }
+  get wethAddress() {
+    return this.exchange || ({
+      "1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "42": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
     })[this.network];
   }
 }

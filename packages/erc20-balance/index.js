@@ -43,20 +43,25 @@ export default class OrERC20Balance extends OrWeb3Base {
     }
   }
   web3Updated() {
-    this._tokenContract = this.web3.eth.contract(erc20ABI).at(this.token);
-    this._tokenContract.decimals((err, decimals) => {
-      if(!err) {
-        this._divisor = this.web3.toBigNumber(10).pow(decimals);
-      }
-    });
-    this.updateBalance();
+    if(this.token) {
+      this._tokenContract = this.web3.eth.contract(erc20ABI).at(this.token);
+      this._tokenContract.decimals((err, decimals) => {
+        if(!err) {
+          this._divisor = this.web3.toBigNumber(10).pow(decimals);
+        }
+      });
+      setTimeout(() => {this.updateBalance()});
+    }
   }
   updateBalance() {
     let address = this._useAccount ? this.account : this.address;
-    if(address) {
+    if(address && this.token) {
       this._tokenContract.balanceOf(address, (err, balance) => {
         if(!err) {
-          this.balance = balance;
+          if(balance && !this.balance || !balance.eq(this.balance)) {
+            this.balance = balance;
+            this.dispatchEvent(new CustomEvent('change', {detail: {value: balance}, bubbles: false, composed: false}));
+          }
           this._balanceResolve(balance);
         } else {
           console.log("Error getting balance:", err)
@@ -66,10 +71,12 @@ export default class OrERC20Balance extends OrWeb3Base {
     }
   }
   _didRender(props, changedProps, prevProps) {
-    if(props.token != prevProps.token && this.web3) {
-      this._tokenContract = this.web3.eth.contract(erc20ABI).at(this.token);
-      setTimeout(() => {this.updateBalance()});
+    if(changedProps.token && props.token != prevProps.token && this.web3) {
+      this.web3Updated();
     }
+  }
+  get value() {
+    return this.balance.div(this._divisor);
   }
 }
 

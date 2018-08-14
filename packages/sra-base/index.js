@@ -17,6 +17,8 @@ export default class OrSRABase extends OrWeb3Base {
     this.feeRecipient = e.detail.feeRecipient;
     this.exchangeAddress = e.detail.exchangeAddress;
     this.epoch = e.detail.epoch;
+    this.feeTokenAddress = e.detail.feeTokenAddress;
+    this.wethAddress = e.detail.wethAddress;
     this.sraUpdated();
   }
   sraUpdated() {}

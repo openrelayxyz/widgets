@@ -93,6 +93,9 @@ export default class OrSRAFee extends OrSRABase {
     this.refreshFee();
   }
   refreshFee() {
+    if(!this.web3) {
+      return;
+    }
     var body = {};
     var change = false;
     for(var key of ["makerAssetAddress", "takerAssetAddress", "makerAddress", "feeRecipient"]) {

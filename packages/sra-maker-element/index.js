@@ -9,34 +9,62 @@ import request from "@openrelay/element-utilities/request";
 
 export default class OrSRAMaker extends OrSRABase {
   static get is() { return "or-sra-maker" };
-  _render({i18n, makerAsset, takerAsset, makerAssetQuantity, askingPrice, expirationDateTime}) {
+  _render({i18n, makerAsset, makerAssetBalance, takerAsset, makerAssetQuantity, askingPrice, expirationDateTime, feeTokenBalance, feeTokenAddress}) {
     let result = [
       html`<h2 style="grid-area: maker-asset-header;">${i18n("Specify token offer")}</h2>`,
       html`<or-token-select style="grid-area: maker-asset;" id="maker-asset"></or-token-select>`,
       html`<input style="grid-area: maker-asset-quantity;" id="maker-asset-quantity" type="number" placeholder="${i18n("Specify Quantity")}"></input>`,
+      html`<or-erc20-balance style="grid-area: maker-asset-balance;" hide="${!makerAsset}" id="maker-asset-balance" token="${makerAsset ? makerAsset.address : ''}" round="2"></or-erc20-balance>`,
       html`<h2 style="grid-area: fee-header;">${i18n("Maker/Taker Fee Split")}</h2>`,
+      html`<or-erc20-balance style="grid-area: fee-token-balance;" id="fee-token-balance" token="${feeTokenAddress}" round="2"></or-erc20-balance>`,
       html`<or-sra-fee makerAssetAddress="${makerAsset ? makerAsset.address : ""}" style="grid-area: fee-select;" id="fee"></or-sra-fee>`,
       html`<h2 style="grid-area: taker-asset-header;">${i18n("Specify Requested Token")}</h2>`,
       html`<or-token-select style="grid-area: taker-asset;" id="taker-asset"></or-token-select>`,
+      html`<or-erc20-balance style="grid-area: taker-asset-balance;" hide="${!takerAsset}" id="taker-asset-balance" token="${takerAsset ? takerAsset.address : ''}" round="2"></or-erc20-balance>`,
       html`<label style="grid-area: asking-price-label;" for="asking-price">${takerAsset ? takerAsset.symbol : "Token"}</label>`,
       html`<input style="grid-area: asking-price;" id="asking-price" type="number" placeholder="${("Asking Price (per token)")}"></input>`,
       html`<h2 style="grid-area: expiration-header;">${i18n("Set expiration date/time")}</h2>`,
       html`<input style="grid-area: expiration-date-time;" id="expiration-date-time" type="datetime-local" min="${new Date().toISOString().split(".")[0]}"></input>`,
     ];
-    if(makerAssetQuantity && makerAsset && takerAsset && expirationDateTime) {
-      let hash = this.value.hash;
-      result.push(html`<h2 style="grid-area: review-header;">${i18n("Review your offer and post your order")}</h2>`);
-      result.push(
-        html`
-        <div style="grid-area: review;" class="review">
-        ${i18n("You are offering")} ${makerAssetQuantity} ${makerAsset.symbol}
-        ${i18n("for")} ${takerAsset.symbol} ${i18n("at an asking price of")}
-        ${askingPrice} ${takerAsset.symbol} per ${makerAsset.symbol}.
-        ${i18n("Your offer is set to expire on")} ${expirationDateTime.toLocaleDateString()} ${i18n("at")} ${expirationDateTime.toLocaleTimeString()}
-        </div>
-        <or-web3-sign id="signature" style="grid-area: sign;" message="${hash}"></or-web3-sign>
-        `
-      );
+    if(makerAssetQuantity && makerAssetBalance && feeTokenBalance && makerAsset && takerAsset && expirationDateTime) {
+      if(makerAssetBalance.lt(makerAssetQuantity)) {
+        result.push(html`<h2 style="grid-area: review-header;">${i18n("Review your offer and post your order")}</h2>`);
+        result.push(
+          html`
+          <div style="grid-area: review;" class="review">
+            Your balance of ${makerAsset.symbol} is ${makerAssetBalance.toString()},
+            but you are offering ${makerAssetQuantity}. Please adjust your offer to a
+            quantity you can fill.
+          </div>
+          `
+        );
+      } else if(feeTokenBalance.lt(this.makerFee)) {
+        let makerFee = this.makerFee;
+        result.push(html`<h2 style="grid-area: review-header;">${i18n("Review your offer and post your order")}</h2>`);
+        result.push(
+          html`
+          <div style="grid-area: review;" class="review">
+            Your balance of ZRX is ${feeTokenBalance.toString()}, but you are
+            committing to pay ${makerFee.div(1e18)}. Please adjust your offer
+            to a quantity you can fill.
+          </div>
+          `
+        );
+      } else {
+        let hash = this.value.hash;
+        result.push(html`<h2 style="grid-area: review-header;">${i18n("Review your offer and post your order")}</h2>`);
+        result.push(
+          html`
+          <div style="grid-area: review;" class="review">
+          ${i18n("You are offering")} ${makerAssetQuantity} ${makerAsset.symbol}
+          ${i18n("for")} ${takerAsset.symbol} ${i18n("at an asking price of")}
+          ${askingPrice} ${takerAsset.symbol} per ${makerAsset.symbol}.
+          ${i18n("Your offer is set to expire on")} ${expirationDateTime.toLocaleDateString()} ${i18n("at")} ${expirationDateTime.toLocaleTimeString()}
+          </div>
+          <or-web3-sign id="signature" style="grid-area: sign;" message="${hash}"></or-web3-sign>
+          `
+        );
+      }
     }
 
     return html`
@@ -44,12 +72,13 @@ export default class OrSRAMaker extends OrSRABase {
       #maker-grid {
         grid-template-areas:
           "maker-asset-header maker-asset-header maker-asset-header"
-          ". maker-asset ."
+          ". maker-asset maker-asset-balance"
           ". maker-asset-quantity ."
           "fee-header fee-header fee-header"
+          ". fee-token-balance ."
           "fee-select fee-select fee-select"
           "taker-asset-header taker-asset-header taker-asset-header"
-          ". taker-asset ."
+          ". taker-asset taker-asset-balance"
           "asking-price-label asking-price ."
           "expiration-header expiration-header expiration-header"
           "expiration-date-time expiration-date-time expiration-date-time"
@@ -97,6 +126,9 @@ export default class OrSRAMaker extends OrSRABase {
     let shadowRoot = this.shadowRoot;
     this.bindToValue("#maker-asset", "makerAsset");
     this.bindToValue("#taker-asset", "takerAsset");
+    this.bindToValue("#maker-asset-balance", "makerAssetBalance");
+    this.bindToValue("#taker-asset-balance", "takerAssetBalance");
+    this.bindToValue("#fee-token-balance", "feeTokenBalance");
     this.bindToValue("#maker-asset-quantity", "makerAssetQuantity");
     this.bindToValue("#asking-price", "askingPrice");
     this.bindToValue("#expiration-date-time", "expirationDateTime", x => new Date(x));
@@ -112,8 +144,9 @@ export default class OrSRAMaker extends OrSRABase {
       body.web3 = undefined;
       console.log(body);
       request({
-        url: this.sra + "v1/fees",
+        url: this.sra + "v1/order",
         method: "POST",
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify(body),
       }).then((result) => {
         console.log("Posted");
@@ -164,6 +197,11 @@ export default class OrSRAMaker extends OrSRABase {
       expirationDateTime: Date,
       signature: String,
       lang: String,
+      makerAssetBalance: String,
+      takerAssetBalance: String,
+      feeTokenBalance: String,
+      feeTokenAddress: String,
+      makerFee: String,
     };
   }
 }
