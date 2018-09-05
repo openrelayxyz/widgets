@@ -144,7 +144,7 @@ export default class OrSRAMaker extends OrSRABase {
       body.web3 = undefined;
       console.log(body);
       request({
-        url: this.sra + "v1/order",
+        url: this.sra + "v2/order",
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(body),

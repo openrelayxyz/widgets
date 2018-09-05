@@ -19,6 +19,7 @@ export default class OrSRABase extends OrWeb3Base {
     this.epoch = e.detail.epoch;
     this.feeTokenAddress = e.detail.feeTokenAddress;
     this.wethAddress = e.detail.wethAddress;
+    this.erc20ProxyAddress = e.detail.erc20ProxyAddress;
     this.sraUpdated();
   }
   sraUpdated() {}

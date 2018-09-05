@@ -1,4 +1,4 @@
-import {LitElement, html} from '@polymer/lit-element';
+import {LitElement} from '@polymer/lit-element';
 
 export default class OrWeb3Base extends LitElement {
   constructor() {

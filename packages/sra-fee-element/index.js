@@ -1,4 +1,4 @@
-import {LitElement, html} from '@polymer/lit-element';
+import {html} from '@polymer/lit-element';
 import OrSRABase from '@openrelay/sra-base';
 import request from "@openrelay/element-utilities/request";
 
@@ -108,7 +108,7 @@ export default class OrSRAFee extends OrSRABase {
     }
     this._lastFeeRequest = body;
     if(change || !this.totalFee) {
-      request({url: this.sra + "v1/fees", method: "post", body: JSON.stringify(body) }).then((result) => {
+      request({url: this.sra + "v2/order_config", method: "post", body: JSON.stringify(body) }).then((result) => {
         var feeBody = JSON.parse(result);
         if(feeBody.feeRecipient != this.feeRecipient) {
           // If the provided fee recipieint does not match the fee recipient in
