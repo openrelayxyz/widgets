@@ -24,15 +24,29 @@ export default class UnsignedOrder {
     this.takerFee = numberValidOrThrow(this.web3.toBigNumber(order.takerFee));
   }
   get hash() {
-    let domainSchemaSha = this.web3.sha3("DomainSeparator(address contract)");
-    let orderSchemaSha = this.web3.sha3("Order(address makerAddress,address takerAddress,address feeRecipientAddress,address senderAddress,uint256 makerAssetAmount,uint256 takerAssetAmount,uint256 makerFee,uint256 takerFee,uint256 expirationTimeSeconds,uint256 salt,bytes makerAssetData,bytes takerAssetData,)");
-    let exchangeSha = this.web3.sha3(this.exchangeAddress, {encoding: "hex"});
+    let twelveNullBytes = new Buffer([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    let domainSchemaSha = this.web3.sha3("EIP712Domain(string name,string version,address verifyingContract)");
+    let orderSchemaSha = this.web3.sha3("Order(address makerAddress,address takerAddress,address feeRecipientAddress,address senderAddress,uint256 makerAssetAmount,uint256 takerAssetAmount,uint256 makerFee,uint256 takerFee,uint256 expirationTimeSeconds,uint256 salt,bytes makerAssetData,bytes takerAssetData)");
+    let nameSha = this.web3.sha3("0x Protocol");
+    let versionSha = this.web3.sha3("2");
     let makerAssetSha = this.web3.sha3(this.makerAssetData, {encoding: "hex"});
     let takerAssetSha = this.web3.sha3(this.takerAssetData, {encoding: "hex"});
+    let domainSha = this.web3.sha3(Buffer.concat([
+      new Buffer(trim(domainSchemaSha, "0x"), "hex"),
+      new Buffer(trim(nameSha, "0x"), "hex"),
+      new Buffer(trim(versionSha, "0x"), "hex"),
+      twelveNullBytes,
+      new Buffer(trim(this.exchangeAddress, "0x"), "hex"),
+    ]).toString("hex"), {encoding: "hex"});
     let orderBytes = Buffer.concat([
+      new Buffer(trim(orderSchemaSha, "0x"), "hex"),
+      twelveNullBytes,
       new Buffer(trim(this.makerAddress, "0x"), "hex"),
+      twelveNullBytes,
       new Buffer(trim(this.takerAddress, "0x"), "hex"),
+      twelveNullBytes,
       new Buffer(trim(this.feeRecipientAddress, "0x"), "hex"),
+      twelveNullBytes,
       new Buffer(trim(this.senderAddress, "0x"), "hex"),
       bigNumberToBuffer(this.makerAssetAmount),
       bigNumberToBuffer(this.takerAssetAmount),
@@ -46,9 +60,8 @@ export default class UnsignedOrder {
     let orderSha = this.web3.sha3(orderBytes.toString("hex"), {encoding: "hex"});
 
     return this.web3.sha3(
-      trim(domainSchemaSha, "0x") +
-      trim(exchangeSha, "0x") +
-      trim(orderSchemaSha, "0x") +
+      "1901" +
+      trim(domainSha, "0x") +
       trim(orderSha, "0x"),
       {encoding: "hex"}
     );
