@@ -4,6 +4,7 @@ import i18n from '@openrelay/sra-maker-element/i18n.json';
 import '@openrelay/token-select-element';
 import '@openrelay/web3-sign-element';
 import '@openrelay/sra-fee-element';
+import '@openrelay/sra-enable-token';
 import UnsignedOrder from '@openrelay/element-utilities/unsignedorder';
 import request from "@openrelay/element-utilities/request";
 
@@ -14,9 +15,11 @@ export default class OrSRAMaker extends OrSRABase {
       html`<h2 style="grid-area: maker-asset-header;">${i18n("Specify token offer")}</h2>`,
       html`<or-token-select style="grid-area: maker-asset;" id="maker-asset"></or-token-select>`,
       html`<input style="grid-area: maker-asset-quantity;" id="maker-asset-quantity" type="number" placeholder="${i18n("Specify Quantity")}"></input>`,
+      html`<or-sra-enable-token style="grid-area: maker-asset-enable;" id="maker-asset-enable" tokenAddress="${makerAsset ? makerAsset.address : ''}"></or-sra-enable-token>`,
       html`<or-erc20-balance style="grid-area: maker-asset-balance;" hide="${!makerAsset}" id="maker-asset-balance" token="${makerAsset ? makerAsset.address : ''}" round="2"></or-erc20-balance>`,
       html`<h2 style="grid-area: fee-header;">${i18n("Maker/Taker Fee Split")}</h2>`,
       html`<or-erc20-balance style="grid-area: fee-token-balance;" id="fee-token-balance" token="${feeTokenAddress}" round="2"></or-erc20-balance>`,
+      html`<or-sra-enable-token style="grid-area: fee-enable;" id="fee-enable" tokenAddress="${feeTokenAddress}"></or-sra-enable-token>`,
       html`<or-sra-fee makerAssetAddress="${makerAsset ? makerAsset.address : ""}" style="grid-area: fee-select;" id="fee"></or-sra-fee>`,
       html`<h2 style="grid-area: taker-asset-header;">${i18n("Specify Requested Token")}</h2>`,
       html`<or-token-select style="grid-area: taker-asset;" id="taker-asset"></or-token-select>`,
@@ -73,9 +76,9 @@ export default class OrSRAMaker extends OrSRABase {
         grid-template-areas:
           "maker-asset-header maker-asset-header maker-asset-header"
           ". maker-asset maker-asset-balance"
-          ". maker-asset-quantity ."
+          ". maker-asset-quantity maker-asset-enable"
           "fee-header fee-header fee-header"
-          ". fee-token-balance ."
+          ". fee-token-balance fee-enable"
           "fee-select fee-select fee-select"
           "taker-asset-header taker-asset-header taker-asset-header"
           ". taker-asset taker-asset-balance"

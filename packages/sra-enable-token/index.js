@@ -25,7 +25,6 @@ export default class OrSRAEnableToken extends OrSRABase {
     });
   }
   web3Updated() {
-    this.tokenWrapper = this.web3.eth.contract(tokenABI).at(this.tokenAddress);
     this.onBlock(() => { this.updateState() });
   }
   sraUpdated() {
@@ -39,9 +38,15 @@ export default class OrSRAEnableToken extends OrSRABase {
     }
   }
   updateState() {
+    if(this.tokenAddress) {
+      this.tokenWrapper = this.web3.eth.contract(tokenABI).at(this.tokenAddress);
+    } else {
+      this.tokenWrapper = undefined;
+    }
     if(this.tokenWrapper && this.account && (this.operatorAddress || this.erc20ProxyAddress)) {
-      this.tokenWrapper.allowance(this.account,  this.operatorAddress || this.erc20ProxyAddress, (err, allowance) => {
+      this.tokenWrapper.allowance(this.account, this.operatorAddress || this.erc20ProxyAddress, (err, allowance) => {
         if(!err) {
+          // TODO: If Quantity is maxint, consider MAXINT/2 enabled
           let enabled = allowance.gte(this.quantity);
           if (this.enabled != enabled) {
             this.waiting = false;
