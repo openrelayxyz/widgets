@@ -41,7 +41,7 @@ export default class OrSRAMaker extends OrSRABase {
           </div>
           `
         );
-      } else if(feeTokenBalance.lt(this.makerFee)) {
+      } else if(feeTokenBalance.lt(this.makerFee.div(1e18))) {
         let makerFee = this.makerFee;
         result.push(html`<h2 style="grid-area: review-header;">${i18n("Review your offer and post your order")}</h2>`);
         result.push(
@@ -164,7 +164,7 @@ export default class OrSRAMaker extends OrSRABase {
       // TODO: Double check takerAssetAmount calculation
       let makerAssetAmount = this.web3.toBigNumber(10).pow(this.makerAsset.decimals).mul(this.makerAssetQuantity);
       // decimalAdjustedPrice = askingPrice * (10 ** makerDecimal) / (10 ** takerDecimal)
-      let decimalAdjustedPrice = this.web3.toBigNumber(this.askingPrice).mul(this.web3.toBigNumber(10).pow(this.makerAsset.decimals).div(this.web3.toBigNumber(10).pow(this.takerAsset.decimals)));
+      let decimalAdjustedPrice = this.web3.toBigNumber(this.askingPrice).mul(this.web3.toBigNumber(10).pow(this.takerAsset.decimals).div(this.web3.toBigNumber(10).pow(this.makerAsset.decimals)));
       let takerAssetAmount = decimalAdjustedPrice.mul(makerAssetAmount);
       return new UnsignedOrder({
         exchangeAddress: this.exchangeAddress,
@@ -177,7 +177,7 @@ export default class OrSRAMaker extends OrSRABase {
         salt: this.epoch,
         senderAddress: "0x0000000000000000000000000000000000000000", // TODO: Get this from the fee element
         takerAddress: "0x0000000000000000000000000000000000000000",  // TODO: Get this from the fee element
-        takerAssetAmount: takerAssetAmount,
+        takerAssetAmount: takerAssetAmount.toFixed(0),
         takerAssetData: `0xf47261b0000000000000000000000000${this.takerAsset.address.slice(2)}`,
         takerFee: this.takerFee,
       });

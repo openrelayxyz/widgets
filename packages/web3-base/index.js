@@ -27,19 +27,19 @@ export default class OrWeb3Base extends LitElement {
     this.web3 = e.detail.web3;
     this.account = e.detail.account;
     this.network = e.detail.network;
-    this.web3Updated();
+    this._web3Updated();
   }
   setAccount(e) {
     this.account = e.detail.account;
     this.resolveAccount(this.account);
     this.accountReady = Promise.resolve(this.account);
-    this.web3Updated();
+    this._web3Updated();
   }
   setNetwork(e) {
     this.network = e.detail.network;
     this.resolveNetwork(this.network);
     this.networkReady = Promise.resolve(this.network);
-    this.web3Updated();
+    this._web3Updated();
   }
   bindToValue(selector, property, transform) {
     transform = transform || (x => x);
@@ -53,6 +53,12 @@ export default class OrWeb3Base extends LitElement {
   }
   clearBlockCallbacks() {
     this.blockCallbacks = [];
+  }
+  _web3Updated() {
+    clearTimeout(this._web3UpdatedDebounce);
+    setTimeout(() => {
+      this.web3Updated();
+    })
   }
   web3Updated() {}
 }

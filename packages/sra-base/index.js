@@ -10,7 +10,7 @@ export default class OrSRABase extends OrWeb3Base {
     super.ready();
     this.addEventListener('sra-ready', e => this.setSRA(e));
     setTimeout(() => this.dispatchEvent(new CustomEvent('sra-child', {detail: {element: this}, bubbles: true, composed: true})));
-    this.sraUpdated();
+    this._sraUpdated();
   }
   setSRA(e) {
     this.sra = e.detail.sra;
@@ -20,7 +20,13 @@ export default class OrSRABase extends OrWeb3Base {
     this.feeTokenAddress = e.detail.feeTokenAddress;
     this.wethAddress = e.detail.wethAddress;
     this.erc20ProxyAddress = e.detail.erc20ProxyAddress;
-    this.sraUpdated();
+    this._sraUpdated();
+  }
+  _sraUpdated() {
+    clearTimeout(this._sraUpdatedDebounce);
+    this._sraUpdatedDebounce = setTimeout(() => {
+      this.sraUpdated();
+    });
   }
   sraUpdated() {}
   static get properties() {
