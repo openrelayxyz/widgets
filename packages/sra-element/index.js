@@ -19,7 +19,7 @@ export default class OrSRA extends OrWeb3 {
     this.sraChildren = [];
     this.sender = "0x0000000000000000000000000000000000000000";
     this.sra = "https://api.openrelay.xyz/";
-    this.feeRecipient = "0xc22d5b2951db72b44cfb8089bb8cd374a3c354ea";
+    this.feeRecipient = "0xfaec02c3474b1a1c553eddf3df27946643cc7122";
     this.addEventListener('sra-child', e => this.registerSRAChild(e));
     this.epochReady = this.networkReady.then(() => {
       return new Promise((resolve, reject) => {
@@ -57,7 +57,7 @@ export default class OrSRA extends OrWeb3 {
   get exchangeAddress() {
     return this.exchange || ({
       "1": "0x4f833a24e1f95d70f028921e27040ca56e09ab0b",
-      "42": "0xa458ec0709468996ef2ef668f5e52f37ceb66627",
+      "42": "0x35dd2932454449b14cee11a94d3674a936d5d7b2",
     })[this.network];
   }
   get feeTokenAddress() {
@@ -71,7 +71,7 @@ export default class OrSRA extends OrWeb3 {
     // TODO: Pull this if this.exchange is not default
     return ({
       "1": "0x2240dab907db71e64d3e0dba4800c83b5c502d4e",
-      "42": "0x9ad1b8209cea603892c9dfaa676bc737088b499a",
+      "42": "0xf1ec01d6236d3cd881a0bf0130ea25fe4234003e",
     })[this.network];
   }
   get wethAddress() {

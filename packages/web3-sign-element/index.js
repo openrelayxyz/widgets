@@ -43,6 +43,11 @@ export default class OrWeb3Sign extends OrWeb3Base {
       });
     });
   }
+  web3Updated() {
+    if(this.rawMessage && !this.message) {
+      this.message = this.web3.sha3(this.rawMessage);
+    }
+  }
   _prefixedMsg(msgBuffer) {
     return ethjsutil.toBuffer(ethjsutil.keccak256(Buffer.concat([ethjsutil.toBuffer("\x19Ethereum Signed Message:\n32"), msgBuffer])));
   }
@@ -68,7 +73,8 @@ export default class OrWeb3Sign extends OrWeb3Base {
   }
   static get properties() {
     return {
-      message: String
+      message: String,
+      rawMessage: String
     };
   }
 }

@@ -8,7 +8,37 @@ export default class OrWeb3 extends LitElement {
     }
     if(hasWeb3) {
       if(networkSupported && topAccount) {
-        return html`<slot></slot>`;
+        let errors = [];
+        let transactions = [];
+        for(let error of this.errors) {
+          console.log(error);
+          errors.push(html`<li>${error}</li>`);
+        }
+        let blockExplorer;
+        switch(this.network) {
+          case "1":
+            blockExplorer = "https://etherscan.io/";
+            break;
+          case "3":
+            blockExplorer = "https://ropsten.etherscan.io/";
+            break;
+          case "4":
+            blockExplorer = "https://rinkeby.etherscan.io/";
+            break;
+          case "42":
+            blockExplorer = "https://kovan.etherscan.io/";
+            break;
+          default:
+            blockExplorer = "#";
+        }
+        for(let transaction of this.transactions) {
+          transactions.push(html`<li><a class="etherscan-link" href="${blockExplorer}tx/${transaction.id}">${transaction.message}</a></li>`);
+        }
+        return html`
+          <slot></slot>
+          <ul id="web3-errors">${errors}</ul>
+          <ul id="web3-transactions">${transactions}</ul>
+        `;
       } else if (!networkSupported) {
         return html`<slot name="netunsupported">This application does not support the network you are connected to</slot>`;
       } else {
@@ -41,12 +71,16 @@ export default class OrWeb3 extends LitElement {
     this.addEventListener('web3-child', e => this.registerChild(e));
     this.addEventListener('set-web3', e => this.setWeb3(e.detail.web3));
     this.addEventListener('subscribe-block', e => this.registerBlockSubscription(e));
+    this.addEventListener('web3-error', e => this.web3Error(e));
+    this.addEventListener('web3-transaction', e => this.web3Transaction(e));
     this.hasWeb3 = false;
     this.loaded = false;
     this.topAccount = null;
     this.network = null;
     this.blockWatcher = null;
     this.blockSubscriptions = [];
+    this.transactions = [];
+    this.errors = [];
     this.networkReady = new Promise((resolve) => {
       this._resolveNetwork = resolve;
     })
@@ -145,6 +179,21 @@ export default class OrWeb3 extends LitElement {
     this.topAccount = account;
     for(var child of this.web3Children) {
       child.dispatchEvent(new CustomEvent('web3-account', {detail: {account: this.topAccount}, bubbles: false, composed: false}));
+    }
+  }
+  web3Error(event) {
+    if(event.detail.error) {
+      this.errors.push(event.detail.error);
+      this.requestRender();
+    }
+  }
+  web3Transaction(event) {
+    if(event.detail.transaction) {
+      if(!event.detail.transaction.message) {
+        event.detail.transaction.message = event.detail.transaction.id;
+      }
+      this.transactions.push(event.detail.transaction);
+      this.requestRender();
     }
   }
   get supportedNetworks() {

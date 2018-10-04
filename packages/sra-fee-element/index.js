@@ -55,12 +55,12 @@ export default class OrSRAFee extends OrSRABase {
     }, bubbles: false, composed: false}));
   }
   get takerFee() {
-    if(this.totalFee.mul && this.value !== undefined) {
+    if(this.totalFee && this.totalFee.mul && this.value !== undefined) {
       return this.totalFee.mul(this.value).div("100");
     }
   }
   get makerFee() {
-    if(this.totalFee.mul && this.value !== undefined) {
+    if(this.totalFee && this.totalFee.mul && this.value !== undefined) {
       return this.totalFee.sub(this.totalFee.mul(this.value).div("100"));
     }
   }
