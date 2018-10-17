@@ -48,7 +48,7 @@ export default class OrSRAEnableToken extends OrSRABase {
     if(this.tokenWrapper && this.account && (this.operatorAddress || this.erc20ProxyAddress)) {
       this.tokenWrapper.allowance(this.account, this.operatorAddress || this.erc20ProxyAddress, (err, allowance) => {
         if(!err) {
-          let enabled = allowance.gte(this.quantity) || (this.quantity == MAX_INT && this.quantity.div(2).gte(allowance));
+          let enabled = allowance.gte(this.quantity) || (this.quantity == MAX_INT && allowance.mul(2).lt(this.quantity));
           if (this.enabled != enabled) {
             this.waiting = false;
             this.enabled = enabled;

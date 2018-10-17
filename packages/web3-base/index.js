@@ -5,6 +5,7 @@ export default class OrWeb3Base extends LitElement {
     super();
     this.addEventListener('web3-ready', e => this.setWeb3(e));
     this.addEventListener('web3-account', e => this.setAccount(e));
+    this.addEventListener('web3-tx-confirm', e => this.txConfirm(e));
     this.addEventListener('web3-network', e => this.setNetwork(e));
     this.addEventListener('block', (e) => {
       for(var cb of this.blockCallbacks) {
@@ -12,6 +13,7 @@ export default class OrWeb3Base extends LitElement {
       }
     });
     this.blockCallbacks = [];
+    this.confirmCallbacks = {};
     this.accountReady = new Promise((resolve, reject) => {
       this.resolveAccount = resolve;
     });
@@ -53,6 +55,27 @@ export default class OrWeb3Base extends LitElement {
   }
   clearBlockCallbacks() {
     this.blockCallbacks = [];
+  }
+  txConfirm(e) {
+    this.dispatchEvent(new CustomEvent('web3-tx-confirm', {detail: {element: this, txid: e.detail.transaction.id}, bubbles: true, composed: true}));
+    if(this.confirmCallbacks[e.detail.transaction.id]) {
+      this.confirmCallbacks[e.detail.transaction.id](e);
+    }
+  }
+  onConfirm(txid, callback) {
+    this.confirmCallbacks[txid] = callback;
+  }
+  emitTransaction(txid, message) {
+    e.detail.element.dispatchEvent(new CustomEvent('web3-transaction', {detail: {
+      element: this,
+      transaction: {id: txid, message: message}
+    }, bubbles: true, composed: true}));
+  }
+  emitError(error) {
+    e.detail.element.dispatchEvent(new CustomEvent('web3-error', {detail: {
+      element: this,
+      err: err
+    }, bubbles: true, composed: true}));
   }
   _web3Updated() {
     clearTimeout(this._web3UpdatedDebounce);

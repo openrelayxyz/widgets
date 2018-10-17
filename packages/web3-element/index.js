@@ -31,13 +31,18 @@ export default class OrWeb3 extends LitElement {
           default:
             blockExplorer = "#";
         }
-        for(let transaction of this.transactions) {
-          transactions.push(html`<li><a class="etherscan-link" href="${blockExplorer}tx/${transaction.id}">${transaction.message}</a></li>`);
+        for(let i=0; i < this.transactions.length; i++) {
+          let transaction = this.transactions[i];
+          transactions.push(html`<li><a data-txindex="${i}" class="etherscan-link" href="${blockExplorer}tx/${transaction.id}">${transaction.message}</a></li>`);
         }
         return html`
           <slot></slot>
-          <ul id="web3-errors">${errors}</ul>
-          <ul id="web3-transactions">${transactions}</ul>
+          <slot name="errors">
+            <ul id="web3-errors">${errors}</ul>
+          </slot>
+          <slot name="transactions">
+            <ul id="web3-transactions">${transactions}</ul>
+          </slot>
         `;
       } else if (!networkSupported) {
         return html`<slot name="netunsupported">This application does not support the network you are connected to</slot>`;

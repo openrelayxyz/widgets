@@ -7,18 +7,19 @@ import '@openrelay/sra-enable-token';
 
 export default class OrSRAOrderFill extends OrSRABase {
   static get is() { return "or-sra-order-fill" };
-  _render({makerTokenName, takerTokenName, makerTokenDecimal, takerTokenDecimal, price, makerTokenAvailable, takerTokenAddress, takerTokenAmount}) {
+  _render({makerTokenName, takerTokenName, makerTokenDecimal, takerTokenDecimal, price, makerTokenAvailable, takerTokenAddress, takerTokenAmount, status}) {
     return html`
     <div hidden="${!this.order}">
       <div>Price: ${price ? price.toFixed(5) : ""} ${takerTokenName} / ${makerTokenName}</div>
       <div>Available: ${makerTokenAvailable} ${makerTokenName}</div>
-      <div>Amount ${takerTokenName}: <input id="taker-token-amount" type="number" value="${takerTokenAmount}"></input> <button id="set_max">Max</button> <or-sra-enable-token tokenAddress="${takerTokenAddress}"></or-sra-enable-token></div>
+      <div>Amount ${takerTokenName}: <input id="taker-token-amount" type="number" value="${takerTokenAmount}"></input> <button id="set_max">Max</button> <or-sra-enable-token token="${takerTokenAddress}"></or-sra-enable-token></div>
       <div hidden="${takerTokenAmount == "" || isNaN(takerTokenAmount) || this.expired}">
         <button id="submit">Submit</button>
       </div>
       <div hidden="${!this.expired}">
         This order has expired
       </div>
+      <div class="status-${status}"></div>
     </div>
     <div hidden="${!!this.order}">
       Loading...
@@ -30,6 +31,7 @@ export default class OrSRAOrderFill extends OrSRABase {
     this.makerTokenDecimal = 18;
     this.takerTokenDecimal = 18;
     this.takerTokenAmount = "";
+    this.status = "none";
   }
   ready() {
     super.ready();
@@ -46,10 +48,16 @@ export default class OrSRAOrderFill extends OrSRABase {
       });
       this.shadowRoot.querySelector("#submit").addEventListener("click", () => {
         let fillAmount = this.web3.toBigNumber(this.takerTokenAmount).mul(this.web3.toBigNumber(10).pow(this.takerTokenDecimal)).round();
+        this.status = "request";
         fillOrKillOrder(this.order, fillAmount.toString(), this.account, this.web3).then((txid) => {
-          alert(txid);
+          this.status = "pending";
+          this.emitTransaction(txid, "Filling order");
+          this.onConfirm(txid, (e) => {
+            this.sraUpdated(); // Will trigger refresh of available amounts
+            this.status = "confirmed";
+          });
         }).catch((err) => {
-          alert(err);
+          this.emitError(err);
         });
       })
     })
@@ -119,13 +127,6 @@ export default class OrSRAOrderFill extends OrSRABase {
       });
     });
   }
-  //  <or-token-sale
-        // orderHash="0x9c22ff5f21f0b81b113e63f7db6da94fedef11b2119b4088b89664fb9a3cb658"
-        // makerTokenName="AFA"
-        // takerTokenName="IPPART"
-        // makerTokenDecimal="2"
-        // takerTokenDecimal="18"></or-token-sale>
-
   static get properties() {
     return {
       orderHash: String,
@@ -137,6 +138,7 @@ export default class OrSRAOrderFill extends OrSRABase {
       makerTokenAvailable: String,
       takerTokenAddress: String,
       takerTokenAmount: Number,
+      status: String,
     };
   }
 }
