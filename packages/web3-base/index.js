@@ -66,15 +66,15 @@ export default class OrWeb3Base extends LitElement {
     this.confirmCallbacks[txid] = callback;
   }
   emitTransaction(txid, message) {
-    e.detail.element.dispatchEvent(new CustomEvent('web3-transaction', {detail: {
+    this.dispatchEvent(new CustomEvent('web3-transaction', {detail: {
       element: this,
       transaction: {id: txid, message: message}
     }, bubbles: true, composed: true}));
   }
   emitError(error) {
-    e.detail.element.dispatchEvent(new CustomEvent('web3-error', {detail: {
+    this.dispatchEvent(new CustomEvent('web3-error', {detail: {
       element: this,
-      err: err
+      error: error
     }, bubbles: true, composed: true}));
   }
   _web3Updated() {

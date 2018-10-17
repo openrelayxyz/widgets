@@ -12,7 +12,7 @@ export default class OrWeb3Sign extends OrWeb3Base {
     this.shadowRoot.querySelector("button").addEventListener("click", () => {
       this.web3.eth.sign(this.account, this.message, (err, result) => {
         if(err) {
-          return dispatch(err);
+          return this.dispatch(err);
         }
         let signature = ethjsutil.toBuffer(result);
         let v = signature[64];
