@@ -22,6 +22,6 @@
   "author": "OpenRelay LLC",
   "license": "LGPL-3.0",
   "dependencies": {
-    "@polymer/lit-element": "^0.5.2"
+    "@polymer/lit-element": "0.6.2"
   }
 }

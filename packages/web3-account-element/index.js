@@ -3,8 +3,8 @@ import OrWeb3Base from '@openrelay/web3-base';
 
 export default class OrWeb3Account extends OrWeb3Base {
   static get is() { return "or-web3-account" };
-  _render({account}) {
-    return html`${account}`;
+  render() {
+    return html`${this.account}`;
   }
   static get properties() {
     return {

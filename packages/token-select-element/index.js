@@ -5,11 +5,11 @@ import request from "@openrelay/element-utilities/request";
 
 export default class OrTokenSelect extends OrWeb3Base {
   static get is() { return "or-token-select" };
-  _render({tokens}) {
+  render() {
     var tokenOptions = [html`<option value="-1">Select a token</option>`];
-    if(tokens) {
-      for(var i = 0; i < tokens.length; i++) {
-        tokenOptions.push(html`<option value="${i}">${tokens[i].symbol}</option>`);
+    if(this.tokens) {
+      for(var i = 0; i < this.tokens.length; i++) {
+        tokenOptions.push(html`<option value="${i}">${this.tokens[i].symbol}</option>`);
       }
     }
     let result = html`<select>${tokenOptions}</select>`;
@@ -17,11 +17,11 @@ export default class OrTokenSelect extends OrWeb3Base {
   }
   static get properties() {
     return {
-      tokens: Array,
-      tokenListUrl: String,
-      selectedToken: Object,
-      selectedIndex: Number,
-      selectedSymbol: String,
+      tokens: {type: Array},
+      tokenListUrl: {type: String},
+      selectedToken: {type: Object},
+      selectedIndex: {type: Number},
+      selectedSymbol: {type: String},
     };
   }
   ready() {
@@ -66,7 +66,7 @@ export default class OrTokenSelect extends OrWeb3Base {
     }
   }
   setToken(index) {
-    this.renderComplete.then(() => {
+    this.updateComplete.then(() => {
       this.shadowRoot.querySelector("select").value = index;
     });
     this.selectedIndex = index;

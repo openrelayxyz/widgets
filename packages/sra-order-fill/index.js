@@ -7,21 +7,21 @@ import '@openrelay/sra-enable-token';
 
 export default class OrSRAOrderFill extends OrSRABase {
   static get is() { return "or-sra-order-fill" };
-  _render({makerTokenName, takerTokenName, makerTokenDecimal, takerTokenDecimal, price, makerTokenAvailable, takerTokenAddress, takerTokenAmount, status}) {
+  render() {
     return html`
-    <div hidden="${!this.order}">
-      <div>Price: ${price ? price.toFixed(5) : ""} ${takerTokenName} / ${makerTokenName}</div>
-      <div>Available: ${makerTokenAvailable} ${makerTokenName}</div>
-      <div>Amount ${takerTokenName}: <input id="taker-token-amount" type="number" value="${takerTokenAmount}"></input> <button id="set_max">Max</button> <or-sra-enable-token token="${takerTokenAddress}"></or-sra-enable-token></div>
-      <div hidden="${takerTokenAmount == "" || isNaN(takerTokenAmount) || this.expired}">
+    <div ?hidden="${!this.order}">
+      <div>Price: ${this.price ? this.price.toFixed(5) : ""} ${this.takerTokenName} / ${this.makerTokenName}</div>
+      <div>Available: ${this.makerTokenAvailable} ${this.makerTokenName}</div>
+      <div>Amount ${this.takerTokenName}: <input id="taker-token-amount" type="number" value="${this.takerTokenAmount}"></input> <button id="set_max">Max</button> <or-sra-enable-token token="${this.takerTokenAddress}"></or-sra-enable-token></div>
+      <div hidden="${this.takerTokenAmount == "" || isNaN(this.takerTokenAmount) || this.expired}">
         <button id="submit">Submit</button>
       </div>
       <div hidden="${!this.expired}">
         This order has expired
       </div>
-      <div class="status-${status}"></div>
+      <div class="status-${this.status}"></div>
     </div>
-    <div hidden="${!!this.order}">
+    <div ?hidden="${!!this.order}">
       Loading...
     </div>
     `;

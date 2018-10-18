@@ -4,7 +4,7 @@ import request from "@openrelay/element-utilities/request";
 
 export default class OrSRAFee extends OrSRABase {
   static get is() { return "or-sra-fee" };
-  _render({value, totalFee, disabled}) {
+  render() {
     let makerFeeDecimal = "";
     let takerFeeDecimal = "";
     if(this.web3) {
@@ -16,7 +16,7 @@ export default class OrSRAFee extends OrSRABase {
         <div style="grid-column-start: 1;">Maker</div>
         <div style="grid-column-start: 3;">Taker</div>
         <div style="grid-column-start: 1" id="maker-fee">${makerFeeDecimal}</div>
-        <input style="grid-column-start: 2" disabled="${disabled}" type="range" min="0" max="100" value="${value}"></input>
+        <input style="grid-column-start: 2" ?disabled=${this.disabled} type="range" min="0" max="100" value="${this.value}"></input>
         <div style="grid-column-start: 3" id="taker-fee">${takerFeeDecimal}</div>
       </div>
       `;
@@ -28,6 +28,7 @@ export default class OrSRAFee extends OrSRABase {
       this._resolveFee = resolve;
     });
     this.value = 0;
+    // this.disabled = false;
   }
   ready() {
     super.ready();
@@ -66,15 +67,15 @@ export default class OrSRAFee extends OrSRABase {
   }
   static get properties() {
     return {
-      value: String,
-      totalFee: String,
+      value: {type: String},
+      totalFee: {type: String},
 
-      feeRecipient: String,
-      makerAssetAddress: String,
-      takerAssetAddress: String,
+      feeRecipient: {type: String},
+      makerAssetAddress: {type: String},
+      takerAssetAddress: {type: String},
 
-      account: String,
-      disabled: Boolean,
+      account: {type: String},
+      disabled: {type: Boolean},
     };
   }
   sraUpdated() {
@@ -89,8 +90,9 @@ export default class OrSRAFee extends OrSRABase {
       this.refreshFee();
     })
   }
-  _didRender(props, changed, prevProps) {
+  update(changedProps) {
     this.refreshFee();
+    return super.update(changedProps);
   }
   refreshFee() {
     if(!this.web3) {

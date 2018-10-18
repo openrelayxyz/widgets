@@ -4,21 +4,21 @@ import erc20ABI from '@openrelay/element-utilities/erc20-abi.json';
 
 export default class OrERC20Balance extends OrWeb3Base {
   static get is() { return "or-erc20-balance" };
-  _render({balance, _divisor, round}) {
-    if(balance) {
-      return html`${balance.div(_divisor).toNumber().toFixed(round)}`;
+  render() {
+    if(this.balance) {
+      console.log(this.balance.div(this._divisor).toNumber().toFixed(this.round));
+      return html`${this.balance.div(this._divisor).toNumber().toFixed(this.round)}`;
     }
     return html`<span class="pending"></span>`;
   }
   static get properties() {
     return {
-      account: String,
-      address: String,
-      token: String,
-      balance: String,
-      round: Number,
-      refresh: Boolean,
-      _divisor: String,
+      account: {type: String},
+      address: {type: String},
+      token: {type: String},
+      round: {type: Number},
+      refresh: {type: Boolean},
+      _divisor: {type: String},
     };
   }
   constructor() {
@@ -61,6 +61,7 @@ export default class OrERC20Balance extends OrWeb3Base {
           if(balance && !this.balance || !balance.eq(this.balance)) {
             this.balance = balance;
             this.dispatchEvent(new CustomEvent('change', {detail: {value: balance}, bubbles: false, composed: false}));
+            this.requestUpdate();
           }
           this._balanceResolve(balance);
         } else {
@@ -70,10 +71,11 @@ export default class OrERC20Balance extends OrWeb3Base {
       });
     }
   }
-  _didRender(props, changedProps, prevProps) {
-    if(changedProps.token && props.token != prevProps.token && this.web3) {
+  update(changedProps) {
+    if(changedProps.has("token") && changedProps.get("token") != this.token && this.web3) {
       this.web3Updated();
     }
+    return super.update(changedProps);
   }
   get value() {
     return this.balance.div(this._divisor);

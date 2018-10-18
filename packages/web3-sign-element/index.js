@@ -4,8 +4,8 @@ import * as ethjsutil from 'ethereumjs-util';
 
 export default class OrWeb3Sign extends OrWeb3Base {
   static get is() { return "or-web3-sign" };
-  _render({message}) {
-    return html`<button disabled="${!message}">Sign</button>`;
+  render() {
+    return html`<button ?disabled="${!this.message}">Sign</button>`;
   }
   ready() {
     super.ready();
@@ -73,8 +73,8 @@ export default class OrWeb3Sign extends OrWeb3Base {
   }
   static get properties() {
     return {
-      message: String,
-      rawMessage: String
+      message: {type: String},
+      rawMessage: {type: String}
     };
   }
 }

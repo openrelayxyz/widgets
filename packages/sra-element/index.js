@@ -6,12 +6,12 @@ export default class OrSRA extends OrWeb3 {
   static get is() { return "or-sra" };
   static get properties() {
     return super.properties.extend({
-      sra: String,
-      feeRecipient: String,
-      exchange: String,
-      sender: String,
-      epoch: Number,
-      version: Number,
+      sra: {type: String},
+      feeRecipient: {type: String},
+      exchange: {type: String},
+      sender: {type: String},
+      epoch: {type: Number},
+      version: {type: Number},
     });
   }
   constructor() {
@@ -35,13 +35,13 @@ export default class OrSRA extends OrWeb3 {
     this.sraChildren.push(e.detail.element);
     this._dispatch(e.detail.element);
   }
-  _didRender(props, changedProps, prevProps) {
-    if(props.sra != prevProps.sra || props.feeRecipient != prevProps.feeRecipient || props.network != prevProps.network || props.epoch != prevProps.epoch) {
+  update(changedProps) {
+    if(this.sra != changedProps.get("sra") || this.feeRecipient != changedProps.get("feeRecipient") || this.network != changedProps.get("network") || this.epoch != changedProps.get("epoch")) {
       for(var child of this.sraChildren) {
         this._dispatch(child);
       }
     }
-    return super._didRender(props, changedProps, prevProps);
+    return super.update(changedProps);
   }
   _dispatch(element) {
     element.dispatchEvent(new CustomEvent('sra-ready', {detail: {

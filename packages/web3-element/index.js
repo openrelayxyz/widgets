@@ -2,12 +2,12 @@ import {LitElement, html} from '@polymer/lit-element';
 
 export default class OrWeb3 extends LitElement {
   static get is() { return "or-web3" };
-  _render({hasWeb3, networkSupported, topAccount, loaded}) {
-    if(!loaded) {
+  render() {
+    if(!this.loaded) {
       return html`<span id="web3-loading"></span>`;
     }
-    if(hasWeb3) {
-      if(networkSupported && topAccount) {
+    if(this.hasWeb3) {
+      if(this.networkSupported && this.topAccount) {
         let errors = [];
         let transactions = [];
         for(let error of this.errors) {
@@ -44,7 +44,7 @@ export default class OrWeb3 extends LitElement {
             <ul id="web3-transactions">${transactions}</ul>
           </slot>
         `;
-      } else if (!networkSupported) {
+      } else if (!this.networkSupported) {
         return html`<slot name="netunsupported">This application does not support the network you are connected to</slot>`;
       } else {
         return html`<slot name="locked">Please unlock your web3 client</slot>`;
@@ -188,8 +188,8 @@ export default class OrWeb3 extends LitElement {
   }
   web3Error(event) {
     if(event.detail.error) {
-      this.errors.push(event.detail.error);
-      this.requestRender();
+      this.errors.push(event.detail.error.message || event.detail.error);
+      this.requestUpdate();
     }
   }
   web3Transaction(event) {
@@ -198,7 +198,7 @@ export default class OrWeb3 extends LitElement {
         event.detail.transaction.message = event.detail.transaction.id;
       }
       this.transactions.push(event.detail.transaction);
-      this.requestRender();
+      this.requestUpdate();
     }
   }
   get supportedNetworks() {

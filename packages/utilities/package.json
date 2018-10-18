@@ -26,6 +26,6 @@
   },
   "private": false,
   "dependencies": {
-    "ethers": "^4.0.0-beta.14"
+    "ethers": "^4.0.7"
   }
 }
