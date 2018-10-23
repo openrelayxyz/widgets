@@ -1,0 +1,75 @@
+---
+layout: default
+---
+
+<script>
+let settings = {
+  SRA_ENDPOINT: "https://api.openrelay.xyz/",
+  FEE_RECIPIENT_ADDRESS: "0xfaec02c3474b1a1c553eddf3df27946643cc7122",
+  {% for item in page.settings %}
+  {{ item[0] }}: (window.location.hash.slice(1) || "{{ item[1] }}"),
+  {% endfor %}
+};
+customElements.define('widget-demo', class extends HTMLElement {
+  constructor() {
+    super(); // always call super() first in the constructor.
+    const shadowRoot = this.attachShadow({mode: 'open'});
+    shadowRoot.innerHTML = `
+      <style>{{ page.code.css }}</style>
+      {{ page.code.html }}
+    `;
+    for(let key of Object.keys(settings)) {
+      shadowRoot.innerHTML = shadowRoot.innerHTML.replace(`#${key}#`, settings[key]);
+    }
+  }
+});
+setTimeout(() => {
+  let escapedHTML = document.querySelector("#escaped-html");
+  if(escapedHTML) {
+    for(let key of Object.keys(settings)) {
+      escapedHTML.innerHTML = escapedHTML.innerHTML.replace(`#${key}#`, settings[key]);
+    }
+  }
+  function setLinks(headers) {
+    for(let header of headers) {
+      if(header.id) {
+        header.innerHTML = '<a href="#' + header.id + '">' + header.innerHTML + '</a>';
+      }
+    }
+  }
+  for(let i=1; i <= 6; i++) {
+    setLinks(document.querySelectorAll("h"+i));
+  }
+});
+</script>
+<section>
+<div class="rendered-element">
+  <h2 id="rendered-element">Rendered</h2>
+  <widget-demo></widget-demo>
+  <script>
+    let demoDoc = document.querySelector("widget-demo").shadowRoot;
+    {{ page.code.js}}
+  </script>
+</div>
+<div id="code" class="row">
+  {% if page.code.html %}
+  <div class="cell" id="top-cell">
+  <pre class="line-numbers"><code class="language-html" id="escaped-html">{{ page.code.html |  escape }}</code></pre></div>
+  {% endif %}
+  {% if page.code.css %}
+  <div class="row cell" id="bottom-cell"><div>
+  <pre class="line-numbers"><code class="language-css">{{ page.code.css | escape }}</code></pre></div><div>
+  {% endif %}
+  {% if page.code.js %}
+  <pre class="line-numbers"><code class="language-js">{{ page.code.js | escape }}</code></pre></div></div>
+  {% endif %}
+</div>
+<div class="installation">
+  <h2 id="installation">Installation</h2>
+  <code>yarn add {{ page.code.npm }}</code>
+</div>
+<div class="description">
+  <h2 id="description">Description</h2>
+  {{ content }}
+</div>
+</section>
