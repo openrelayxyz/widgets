@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "node make-index.js && webpack",
+    "update-docs": "npm run build ; node make-release-data.js ; cp dist/bundle.js ../../docs/assets/js/widgets-bundle.js ; cp dist/release.yml ../../docs/_data/release.yml",
     "testserver": "ganache-cli -p 17545",
     "test": "concurrently --success first --kill-others 'karma start' 'npm run testserver'"
   },
