@@ -64,68 +64,70 @@ export default class OrSRAOrderFill extends OrSRABase {
     this.bindToValue("#taker-token-amount", "takerTokenAmount");
   }
   sraUpdated() {
-    request({
-      url: `${this.sra}v2/order/${this.orderHash}`
-    }).then((resultString) => {
-      let result = JSON.parse(resultString);
-      this.order = result.order;
-      console.log(this);
-      this.takerAssetAmountRemaining = this.web3.toBigNumber(result.metaData.takerAssetAmountRemaining);
-      this.makerTokenAvailable = this.takerAssetAmountRemaining.mul(this.order.makerAssetAmount).div(this.order.takerAssetAmount).div(this.web3.toBigNumber(10).pow(this.makerTokenDecimal));
-      this.takerTokenAddress = `0x${this.order.takerAssetData.slice(34, 74)}`;
-      this.makerTokenAddress = `0x${this.order.makerAssetData.slice(34, 74)}`;
-      this.expired = parseInt(this.order.expirationTimeSeconds) < (new Date().getTime() / 1000);
-      let tokenBase = web3.eth.contract(erc20ABI);
-      let makerTokenWrapper = tokenBase.at(this.makerTokenAddress);
-      let takerTokenWrapper = tokenBase.at(this.takerTokenAddress);
-      if(!this.makerTokenName) {
-        makerTokenWrapper.symbol.call((err, symbol) => {
-          if(!err) {
-            this.makerTokenName = symbol;
-          }
-          console.log(err);
-        });
-      }
-      let makerTokenDecimal = new Promise((resolve, reject) => {
-        if(this.makerTokenDecimal == 18){
-          makerTokenWrapper.decimals.call((err, decimals) => {
+    if(this.orderHash.startsWith("0x")){
+      request({
+        url: `${this.sra}v2/order/${this.orderHash}`
+      }).then((resultString) => {
+        let result = JSON.parse(resultString);
+        this.order = result.order;
+        console.log(this);
+        this.takerAssetAmountRemaining = this.web3.toBigNumber(result.metaData.takerAssetAmountRemaining);
+        this.makerTokenAvailable = this.takerAssetAmountRemaining.mul(this.order.makerAssetAmount).div(this.order.takerAssetAmount).div(this.web3.toBigNumber(10).pow(this.makerTokenDecimal));
+        this.takerTokenAddress = `0x${this.order.takerAssetData.slice(34, 74)}`;
+        this.makerTokenAddress = `0x${this.order.makerAssetData.slice(34, 74)}`;
+        this.expired = parseInt(this.order.expirationTimeSeconds) < (new Date().getTime() / 1000);
+        let tokenBase = web3.eth.contract(erc20ABI);
+        let makerTokenWrapper = tokenBase.at(this.makerTokenAddress);
+        let takerTokenWrapper = tokenBase.at(this.takerTokenAddress);
+        if(!this.makerTokenName) {
+          makerTokenWrapper.symbol.call((err, symbol) => {
             if(!err) {
-              this.makerTokenDecimal = decimals;
-              resolve(decimals);
+              this.makerTokenName = symbol;
             }
-            else {
-              reject(err);
-            }
+            console.log(err);
           });
-        } else {
-          resolve(18);
         }
-      });
-      if(!this.takerTokenName) {
-        takerTokenWrapper.symbol.call((err, symbol) => {
-          if(!err) {
-            this.takerTokenName = symbol;
+        let makerTokenDecimal = new Promise((resolve, reject) => {
+          if(this.makerTokenDecimal == 18){
+            makerTokenWrapper.decimals.call((err, decimals) => {
+              if(!err) {
+                this.makerTokenDecimal = decimals;
+                resolve(decimals);
+              }
+              else {
+                reject(err);
+              }
+            });
+          } else {
+            resolve(18);
           }
         });
-      }
-      let takerTokenDecimal = new Promise((resolve, reject) => {
-        if(this.takerTokenDecimal == 18) {
-          takerTokenWrapper.decimals.call((err, decimals) => {
+        if(!this.takerTokenName) {
+          takerTokenWrapper.symbol.call((err, symbol) => {
             if(!err) {
-              this.takerTokenDecimal = decimals;
-              resolve(decimals);
-            } else {
-              reject(err);
+              this.takerTokenName = symbol;
             }
           });
-        } else {
-          resolve(18);
         }
+        let takerTokenDecimal = new Promise((resolve, reject) => {
+          if(this.takerTokenDecimal == 18) {
+            takerTokenWrapper.decimals.call((err, decimals) => {
+              if(!err) {
+                this.takerTokenDecimal = decimals;
+                resolve(decimals);
+              } else {
+                reject(err);
+              }
+            });
+          } else {
+            resolve(18);
+          }
+        });
+        Promise.all([makerTokenDecimal, takerTokenDecimal]).then(() => {
+          this.price = this.web3.toBigNumber(this.order.takerAssetAmount).div(this.order.makerAssetAmount).mul(this.web3.toBigNumber(10).pow(this.makerTokenDecimal)).div(  this.web3.toBigNumber(10).pow(this.takerTokenDecimal));
+        });
       });
-      Promise.all([makerTokenDecimal, takerTokenDecimal]).then(() => {
-        this.price = this.web3.toBigNumber(this.order.takerAssetAmount).div(this.order.makerAssetAmount).mul(this.web3.toBigNumber(10).pow(this.makerTokenDecimal)).div(  this.web3.toBigNumber(10).pow(this.takerTokenDecimal));
-      });
-    });
+    }
   }
   static get properties() {
     return {

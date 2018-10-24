@@ -30,6 +30,7 @@
   "dependencies": {
     "@openrelay/web3-base": "^0.1.0",
     "@openrelay/web3-element": "^0.1.0",
-    "@polymer/lit-element": "^0.5.2"
+    "@polymer/lit-element": "^0.5.2",
+    "webpack-bundle-analyzer": "^3.0.3"
   }
 }

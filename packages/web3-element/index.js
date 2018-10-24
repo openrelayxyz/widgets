@@ -1,4 +1,5 @@
 import {LitElement, html} from '@polymer/lit-element';
+import Web3 from 'web3';
 
 export default class OrWeb3 extends LitElement {
   static get is() { return "or-web3" };
@@ -114,7 +115,7 @@ export default class OrWeb3 extends LitElement {
     if(this.blockWatcher) {
       this.blockWatcher.stopWatching(console.log);
     }
-    this.blockWatcher = web3.eth.filter("latest");
+    this.blockWatcher = this.web3.eth.filter("latest");
     this.blockWatcher.watch((err, hash) => {
       if(err) {
         console.log("Error watching block:", err);

@@ -45,7 +45,19 @@ setTimeout(() => {
 <section>
 <div class="rendered-element">
   <h2 id="rendered-element">Rendered</h2>
+  {% if !page.web3_override %}
   <widget-demo></widget-demo>
+  {% else %}
+  <or-web3>
+    <widget-demo></widget-demo>
+    <div slot="noweb3">
+      Live demos require a web3 client. We recommend installing <a href="https://metamask.io/">Metamask</a>.
+    </div>
+    <div slot="locked">
+      Live demos require an unlocked web3 client. Please unlock your client.
+    </div>
+  </or-web3>
+  {% endif %}
   <script>
     let demoDoc = document.querySelector("widget-demo").shadowRoot;
     {{ page.code.js}}
@@ -57,11 +69,11 @@ setTimeout(() => {
   <pre class="line-numbers"><code class="language-html" id="escaped-html">{{ page.code.html |  escape }}</code></pre></div>
   {% endif %}
   {% if page.code.css %}
-  <div class="row cell" id="bottom-cell"><div>
-  <pre class="line-numbers"><code class="language-css">{{ page.code.css | escape }}</code></pre></div><div>
+  <div class="row cell" id="bottom-cell">
+  <pre class="line-numbers"><code class="language-css">{{ page.code.css | escape }}</code></pre></div>
   {% endif %}
   {% if page.code.js %}
-  <pre class="line-numbers"><code class="language-js">{{ page.code.js | escape }}</code></pre></div></div>
+  <pre class="line-numbers"><code class="language-js">{{ page.code.js | escape }}</code></pre>
   {% endif %}
 </div>
 <div class="installation">

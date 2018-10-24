@@ -1,8 +1,8 @@
 import erc20ABI from "./erc20-abi.json";
 import zeroExABI from "./0xv2-exchange-abi.json";
-import {utils} from 'ethers';
+import {Interface} from 'ethers/utils/interface.js';
 
-let exchangeInterface = new utils.Interface(zeroExABI);
+let exchangeInterface = new Interface(zeroExABI);
 
 export function fillOrKillOrder(order, amountToFill, account, web3) {
   let baseToken = web3.eth.contract(erc20ABI);

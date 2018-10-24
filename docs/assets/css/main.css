@@ -204,3 +204,12 @@ code {
   min-height:100%;
   position:relative;Z
 }
+
+
+.description table {
+  margin-left: 15%;
+}
+
+.description table td {
+  min-width: 75px;
+}
