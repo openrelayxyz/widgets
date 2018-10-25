@@ -3,6 +3,7 @@ layout: widget
 title:  "Token Select"
 date:   2018-09-26 08:20:00 -0500
 categories: widgets
+package: token-select-element
 code:
   html: |
 

@@ -3,6 +3,7 @@ layout: widget
 title:  "ERC20 Balance"
 date:   2018-09-26 08:30:00 -0500
 categories: widgets
+package: erc20-balance
 code:
   html: |
 

@@ -1,7 +1,10 @@
 ---
 layout: default
 ---
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.2/gh-fork-ribbon.min.css" />
+{% if page.package %}
+<a class="github-fork-ribbon" href="https://github.com/openrelayxyz/widgets/tree/master/packages/{{page.package}}" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
+{% endif %}
 <script>
 let settings = {
   SRA_ENDPOINT: "https://api.openrelay.xyz/",
@@ -45,7 +48,7 @@ setTimeout(() => {
 <section>
 <div class="rendered-element">
   <h2 id="rendered-element">Rendered</h2>
-  {% if !page.web3_override %}
+  {% if page.web3_override != true %}
   <widget-demo></widget-demo>
   {% else %}
   <or-web3>

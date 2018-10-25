@@ -3,6 +3,7 @@ layout: widget
 title:  "Web3 Account"
 date:   2018-09-26 08:10:00 -0500
 categories: widgets
+package: web3-account-element
 code:
   html: |
 

@@ -3,6 +3,7 @@ layout: widget
 title:  "SRA Enable Token"
 date:   2018-09-26 08:50:00 -0500
 categories: widgets
+package: sra-enable-token
 code:
   html: |
 
