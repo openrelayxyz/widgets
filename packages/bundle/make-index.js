@@ -9,7 +9,7 @@ indexFile.write("// This file was automatically generated with ./make-index.js\n
 
 indexFile.once("open", () => {
   for(let pkg of packages) {
-    if(pkg == "bundle") { continue; }
+    if(pkg == "bundle" || pkg == "test-utils") { continue; }
     let pkgJson = require(`../${pkg}/package.json`);
     indexFile.write(`import '${pkgJson.name}';\n`);
   }

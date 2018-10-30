@@ -8,7 +8,6 @@ export default class UnsignedOrder {
     if(!this.web3) {
       throw "Web3 not found. Please provide one.";
     }
-    console.log(order);
     this.exchangeAddress = addressValidOrThrow(order.exchangeAddress);
     this.expirationTimeSeconds = numberValidOrThrow(this.web3.toBigNumber(order.expirationTimeSeconds));
     this.feeRecipientAddress = addressValidOrThrow(order.feeRecipientAddress);

@@ -1,4 +1,5 @@
 import {LitElement, html} from '@polymer/lit-element';
+import Web3 from 'web3';
 
 export default class OrWeb3 extends LitElement {
   static get is() { return "or-web3" };
@@ -54,13 +55,15 @@ export default class OrWeb3 extends LitElement {
     }
   }
   static get properties() { return {
-    hasWeb3: Boolean,
-    network: Number,
-    networkSupported: Boolean,
-    networkCheckInterval: Number,
-    accountCheckInterval: Number,
-    topAccount: String,
-    loaded: Boolean,
+    hasWeb3: {type: Boolean},
+    manualEnable: {type: Boolean},
+    network: {type: Number},
+    networkSupported: {type: Boolean},
+    networkCheckInterval: {type: Number},
+    accountCheckInterval: {type: Number},
+    topAccount: {type: String},
+    loaded: {type: Boolean},
+    loaded: {type: Boolean},
     extend: function(props) {
       for(var key of Object.keys(this)) {
         props[key] = this[key];
@@ -74,7 +77,7 @@ export default class OrWeb3 extends LitElement {
     this.accountCheckInterval = 2000;
     this.networkCheckInterval = 2000;
     this.addEventListener('web3-child', e => this.registerChild(e));
-    this.addEventListener('set-web3', e => this.setWeb3(e.detail.web3));
+    this.addEventListener('set-web3', e => this.setWeb3(e.detail.web3.currentProvider));
     this.addEventListener('subscribe-block', e => this.registerBlockSubscription(e));
     this.addEventListener('web3-error', e => this.web3Error(e));
     this.addEventListener('web3-transaction', e => this.web3Transaction(e));
@@ -90,8 +93,10 @@ export default class OrWeb3 extends LitElement {
       this._resolveNetwork = resolve;
     })
     this.web3Interval = setInterval(() => {
-      if(window.web3 != undefined) {
-        this.setWeb3(window.web3);
+      if(window.ethereum != undefined) {
+        this.setWeb3(window.ethereum);
+      } else if (window.web3 != undefined) {
+        this.setWeb3(window.web3.currentProvider);
       }
     }, 100)
     setTimeout(() => { this.loaded = true; }, 250);
@@ -114,7 +119,7 @@ export default class OrWeb3 extends LitElement {
     if(this.blockWatcher) {
       this.blockWatcher.stopWatching(console.log);
     }
-    this.blockWatcher = web3.eth.filter("latest");
+    this.blockWatcher = this.web3.eth.filter("latest");
     this.blockWatcher.watch((err, hash) => {
       if(err) {
         console.log("Error watching block:", err);
@@ -124,17 +129,32 @@ export default class OrWeb3 extends LitElement {
       }
     });
   }
-  setWeb3(web3) {
+  setWeb3(web3Provider) {
     this.loaded = true;
     this.hasWeb3 = true;
-    this.web3 = new Web3(web3.currentProvider);
+    this.web3 = new Web3(web3Provider);
     clearInterval(this.web3Interval);
     for(var child of this.web3Children) {
       child.dispatchEvent(new CustomEvent('web3-ready', {detail: {web3: this.web3}, bubbles: false, composed: false}));
     }
     this.createBlockWatcher(this.web3);
-    this.watchAccounts();
-    this.watchNetwork();
+    if(!this.manualEnable) {
+      if(this.web3.currentProvider.enable) {
+        this.web3.currentProvider.enable().then(() => {
+          // Check when enable() is called
+          this.watchAccounts();
+          this.watchNetwork();
+        });
+      } else {
+        // enable() is not available, call now
+        this.watchAccounts();
+        this.watchNetwork();
+      }
+    } else {
+      // The app wants to be in charge of calling enable. Start the watchers.
+      this.watchAccounts();
+      this.watchNetwork();
+    }
   }
   watchNetwork() {
     var getNetwork = () => {

@@ -1,11 +1,11 @@
 {
-  "name": "@openrelay/widget-bundle",
+  "name": "@openrelay/sra-signed-order",
   "version": "0.1.0",
-  "description": "All of OpenRelay's widgets in one bundle",
+  "description": "A lit-element that lets the user select a fee",
   "main": "index.js",
   "scripts": {
-    "build": "node make-index.js && webpack",
-    "update-docs": "npm run build ; node make-release-data.js ; cp dist/bundle.js ../../docs/assets/js/widgets-bundle.js ; cp dist/release.yml ../../docs/_data/release.yml",
+    "build": "webpack",
+    "demo-build": "webpack --config webpack.demo.config.js",
     "testserver": "ganache-cli -p 17545",
     "test": "concurrently --success first --kill-others 'karma start' 'npm run testserver'"
   },
@@ -28,9 +28,9 @@
   "author": "OpenRelay LLC",
   "license": "LGPL-3.0",
   "dependencies": {
+    "@0xproject/contract-wrappers": "^1.0.1",
     "@openrelay/web3-base": "^0.1.0",
     "@openrelay/web3-element": "^0.1.0",
-    "@polymer/lit-element": "^0.5.2",
-    "webpack-bundle-analyzer": "^3.0.3"
+    "@polymer/lit-element": "0.6.2"
   }
 }

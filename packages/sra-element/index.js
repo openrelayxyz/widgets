@@ -19,7 +19,7 @@ export default class OrSRA extends OrWeb3 {
     this.sraChildren = [];
     this.sender = "0x0000000000000000000000000000000000000000";
     this.sra = "https://api.openrelay.xyz/";
-    this.feeRecipient = "0xfaec02c3474b1a1c553eddf3df27946643cc7122";
+    this.feeRecipient = "0x74430e1338613b5a9166032cfd8f8f0a717bac67";
     this.addEventListener('sra-child', e => this.registerSRAChild(e));
     this.epochReady = this.networkReady.then(() => {
       return new Promise((resolve, reject) => {
