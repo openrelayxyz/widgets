@@ -22,9 +22,9 @@
             {% endif %}
           {% endif %}
         {% endfor %}
-        <li><a href="/"><img src="../assets/images/orlogo.png" /></a></li>
+        <li><a href="/"><img src="{{ site.baseurl }}/assets/images/orlogo.png" /></a></li>
         <li class="nav-item">
-          <a class="nav-link{% if previous == nil %} disabled{% endif %}" href="{{ previous.url }}#">Previous</a>
+          <a class="nav-link{% if previous == nil %} disabled{% endif %}" href="{{ previous.url | prepend: site.baseurl }}#">Previous</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ page.categories[0] | capitalize }}</a>
@@ -39,13 +39,13 @@
            <div class="dropdown-divider"></div>
            {% for category in site.categories %}
            <div class="dropdown-item">
-             <a class="nav-link{% if page.categories[0] == category %} active{% endif %}" href="{{ category[1][-1].url  }}">{{ category[0] | capitalize }}</a>
+             <a class="nav-link{% if page.categories[0] == category %} active{% endif %}" href="{{ category[1][-1].url | prepend: site.baseurl }}">{{ category[0] | capitalize }}</a>
            </div>
            {% endfor %}
          </div>
        </li>
        <li class="nav-item">
-         <a class="nav-link{% if next == nil %} disabled{% endif %}" href="{{ next.url }}#">Next</a>
+         <a class="nav-link{% if next == nil %} disabled{% endif %}" href="{{ next.url | prepend: site.baseurl  }}#">Next</a>
        </li>
      </ul>
      {% endif %}
@@ -53,13 +53,13 @@
         {{ content }}
       </section>
       <div class="footcols">
-        <footer><div id="footcontent"><span id="c">&copy;</span> <img id="footimage" src="../assets/images/orlogo.png" /><a href="https://openrelay.xyz/" id="footlink">OpenRelay 2018</a></div></footer>
+        <footer><div id="footcontent"><span id="c">&copy;</span> <img id="footimage" src="{{ site.baseurl }}/assets/images/orlogo.png" /><a href="https://openrelay.xyz/" id="footlink">OpenRelay 2018</a></div></footer>
       </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-    <link href="../assets/css/prism.css" rel="stylesheet" />
-    <script src="../assets/js/prism.js"></script>
+    <link href="{{ site.baseurl }}/assets/css/prism.css" rel="stylesheet" />
+    <script src="{{ site.baseurl }}/assets/js/prism.js"></script>
   </body>
 </html>

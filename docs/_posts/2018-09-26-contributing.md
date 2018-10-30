@@ -19,7 +19,7 @@ There are several ways you can contribute to OpenRelay's widgets:
 
 # FORT
 
-<img src="../../assets/images/fort-logo.png" width="300px">
+<img src="../assets/images/fort-logo.png" width="300px">
 
 For people who make contributions to OpenRelay, we offer Friends of OpenRelay
 Tokens (FORT) as a reward. We have a [Screen Side Chat](https://www.youtube.com/watch?v=CooLLPOjnOM)

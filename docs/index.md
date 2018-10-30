@@ -2,7 +2,7 @@
 layout: post
 ---
 
-# <img src="./assets/images/orlogo.png" width="50px"> OpenRelay Widget Toolkit
+# <img src="{{ site.baseurl }}/assets/images/orlogo.png" width="50px"> OpenRelay Widget Toolkit
 
 Welcome to the Interactive Documentation Site for the OpenRelay Widget Toolkit.
 We are building a toolkit of
