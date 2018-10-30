@@ -69,7 +69,7 @@ h1 a:hover::after, h2 a:hover::after, h3 a:hover::after, h4 a:hover::after, h5 a
   content: " \00B6";
 }
 
-img {
+.nav img {
   width:50px;
   margin-left:5px;
 }

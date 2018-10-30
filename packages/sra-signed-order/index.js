@@ -10,7 +10,7 @@ export default class OrSRASignedOrderBase extends OrSRABase {
   static get is() { return "or-sra-signed-order" };
   render() {
     return html`
-      <div>Price: ${this.price ? this.price.toFixed(5) : ""} <span title="${this.takerTokenAddress}">${this.takerTokenName}</span> / <span title="${this.makerTokenAddress}">${this.makerTokenName}></span></div>
+      <div>Price: ${this.price ? this.price.toFixed(5) : ""} <span title="${this.takerTokenAddress}">${this.takerTokenName}</span> / <span title="${this.makerTokenAddress}">${this.makerTokenName}</span></div>
       <div>Available: ${this.makerTokenAvailable} ${this.makerTokenName}</div>
       <div ?hidden="${!this.expired}">
         This order has expired

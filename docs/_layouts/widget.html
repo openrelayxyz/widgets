@@ -1,6 +1,7 @@
 ---
 layout: default
 ---
+<h1>{{ page.title }}</h1>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.2/gh-fork-ribbon.min.css" />
 {% if page.package %}
 <a target="_blank" class="github-fork-ribbon" href="https://github.com/openrelayxyz/widgets/tree/master/packages/{{page.package}}" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
@@ -48,23 +49,25 @@ setTimeout(() => {
 <section>
 <div class="rendered-element">
   <h2 id="rendered-element">Rendered</h2>
-  {% if page.web3_override != true %}
+  {% if page.web3_override == true %}
   <widget-demo></widget-demo>
   {% else %}
   <or-web3>
     <widget-demo></widget-demo>
-    <div slot="noweb3">
+    <span slot="noweb3">
       Live demos require a web3 client. We recommend installing <a href="https://metamask.io/">Metamask</a>.
-    </div>
-    <div slot="locked">
+    </span>
+    <span slot="locked">
       Live demos require an unlocked web3 client. Please unlock your client.
-    </div>
+    </span>
   </or-web3>
   {% endif %}
+  {% if page.code.js %}
   <script>
     let demoDoc = document.querySelector("widget-demo").shadowRoot;
     {{ page.code.js}}
   </script>
+  {% endif %}
 </div>
 <div id="code" class="row">
   {% if page.code.html %}

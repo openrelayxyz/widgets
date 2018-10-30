@@ -1,11 +1,9 @@
 ---
 layout: post
 title:  "Installation"
-date:   2018-09-26 07:15:26 -0500
+date:   2018-09-26 07:15:00 -0500
 categories: introduction
 ---
-
-# Installation
 
 Depending on what you're trying to do there are two different ways to install
 the OpenRelay widget toolkit.

@@ -1,7 +1,7 @@
 ---
 layout: widget
 title:  "SRA Order Fill"
-date:   2018-09-26 08:50:00 -0500
+date:   2018-09-26 09:30:00 -0500
 categories: widgets
 package: sra-order-fill
 code:
@@ -19,6 +19,11 @@ settings:
 The `<or-sra-order-fill>` widget allows users to fill a specific 0x order. The
 order hash is provided to the widget, and the user is given information about
 the order and the inputs necessary to fill the order.
+
+Under the hood, the `<or-sra-order-fill>` widget is a light wrapper around the
+[`<or-sra-signed-order>`](./or-sra-signed-order.html) widget, which populates
+it after retrieving the order from the relayer based on the hash, then provides
+inputs for filling the order.
 
 #### API
 
