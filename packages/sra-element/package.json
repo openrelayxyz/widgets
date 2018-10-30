@@ -1,12 +1,15 @@
 {
   "name": "@openrelay/sra-element",
   "version": "0.1.0",
-  "description": "A lit-element tag for managing web3",
+  "description": "A lit-element tag for managing web3 and Standard Relayer API interactions",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
     "testserver": "ganache-cli -p 17545",
     "test": "concurrently --success first --kill-others 'karma start' 'npm run testserver'"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "lit-element",

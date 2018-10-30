@@ -9,6 +9,9 @@
     "testserver": "ganache-cli -p 17545",
     "test": "concurrently --success first --kill-others 'karma start' 'npm run testserver'"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "lit-element",
     "openrelay",

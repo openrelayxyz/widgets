@@ -1,13 +1,16 @@
 {
   "name": "@openrelay/web3-sign-element",
   "version": "0.1.0",
-  "description": "A lit-element that displays the current web3 account",
+  "description": "A lit-element that signs messages",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
     "demo-build": "webpack --config webpack.demo.config.js",
     "testserver": "ganache-cli -p 17545",
     "test": "concurrently --success first --kill-others 'karma start' 'npm run testserver'"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "lit-element",

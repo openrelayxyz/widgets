@@ -9,6 +9,9 @@
   "scripts": {
     "build": "webpack"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "events": "^3.0.0",
     "web3": "0.20.6",

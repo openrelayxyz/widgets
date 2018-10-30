@@ -1,13 +1,16 @@
 {
   "name": "@openrelay/sra-maker-element",
   "version": "0.1.0",
-  "description": "A lit-element that lets the user select a fee",
+  "description": "A lit-element that lets the create a 0x order and submit it to a relayer",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
     "demo-build": "webpack --config webpack.demo.config.js",
     "testserver": "ganache-cli -p 17545",
     "test": "concurrently --success first --kill-others 'karma start' 'npm run testserver'"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "lit-element",
