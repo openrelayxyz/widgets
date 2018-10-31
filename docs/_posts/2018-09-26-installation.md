@@ -25,7 +25,7 @@ HTML and start embedding our Widget tags without writing any custom JavaScript:
 
 <pre><code class="language-html">
 &lt;script src="{{ site.url }}/{{ site.data.release.version }}/assets/js/widgets-bundle.js"
-        integrity="sha256-{{ site.data.release.bundle_checksum }}">
+        integrity="{{ site.data.release.bundle_checksum }}">
 &lt;/script>
 </code></pre>
 

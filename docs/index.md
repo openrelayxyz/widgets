@@ -18,7 +18,7 @@ Getting started:
 
 * [Installation](./introduction/installation.html) - If you want to incorporate
   OpenRelay's widgets into your own site, start here.
-* [Widgets](./widgets/or-web3.md) - If you just want to explore the widgets,
+* [Widgets](./widgets/or-web3.html) - If you just want to explore the widgets,
   start here.
 
 The OpenRelay Widget Toolkit is an open source project, and we invite

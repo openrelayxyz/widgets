@@ -7,11 +7,11 @@ cd $CWD/packages/bundle
 
 yarn install
 
-yarn run update-docs
 
-TAG=$(git describe HEAD --tags)
+export TAG=$(git describe HEAD --tags)
 BRANCH=$(git branch | grep \* | cut -d ' ' -f2 | sed s/master/latest/g)
 
+yarn run update-docs
 
 cd $CWD/docs/
 echo "baseurl: /$BRANCH" > _branch_config.yml
