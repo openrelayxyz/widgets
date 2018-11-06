@@ -30,7 +30,6 @@ describe('<or-web3-sign>', () => {
           }
           let message = ethjsutil.toBuffer(document.getElementById('test-element').message);
           let signature = ethjsutil.toBuffer(document.getElementById('test-element').value);
-          console.log(signature);
           let v = signature[0];
           let r = signature.slice(1, 33);
           let s = signature.slice(33, 65);
@@ -38,7 +37,6 @@ describe('<or-web3-sign>', () => {
           if(sigType == 3) {
             message = ethjsutil.keccak256(Buffer.concat([ethjsutil.toBuffer("\x19Ethereum Signed Message:\n32"), message]));
           }
-          console.log(v, r, s, sigType, message);
           assert.equal(
             ethjsutil.bufferToHex(ethjsutil.pubToAddress(ethjsutil.ecrecover(message, v, r, s))),
             document.getElementById('test-element').account

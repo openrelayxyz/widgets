@@ -27,13 +27,17 @@ describe('<or-sra>', () => {
     document.getElementById("fixture").dispatchEvent(
       new CustomEvent('set-web3', {detail: {web3: web3}, bubbles: false, composed: false})
     );
-    setTimeout(() => {
-      return document.getElementById("fixture").requestUpdate().then(() => {
-        assert.isTrue(document.getElementById("fixture").hasWeb3);
-        assert.equal(document.getElementById("fixture").shadowRoot.innerHTML, '<slot></slot>');
-        web3.currentProvider.stop(console.log);
-      });
-    });
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(document.getElementById("fixture").requestUpdate().then(() => {
+          assert.isTrue(document.getElementById("fixture").hasWeb3);
+          // Clean up whitespace and LitElement's markup
+          let innerHTML = document.getElementById("fixture").shadowRoot.innerHTML.split("\n").join(" ").split("<!---->").join(" ").split(" ").filter((a) => !!a).join(" ")
+          assert.equal(innerHTML, '<slot></slot> <slot name="errors"> <ul id="web3-errors"> </ul> </slot> <slot name="transactions"> <ul id="web3-transactions"> </ul> </slot>');
+          web3.currentProvider.stop(console.log);
+        }));
+      }, 100);
+    })
   });
   it('should sra == "https://api.openrelay.xyz/"', () => {
     testArea.innerHTML = '<or-sra id="fixture">Web3 Content</or-sra>';

@@ -54,15 +54,12 @@ export default class OrWeb3Sign extends OrWeb3Base {
   _recover(msg, v, r, s) {
     try {
       let x = ethjsutil.bufferToHex(ethjsutil.pubToAddress(ethjsutil.ecrecover(msg, v, r, s)));
-      console.log(x);
       return x;
     } catch (e) {
-      console.log(e);
       return "badsignature";
     }
   }
   dispatch(err, v, r, s, sigType) {
-    console.log("Dispatch called:", err)
     if(err) {
       this.dispatchEvent(new CustomEvent('sign', {detail: {error: err}, bubbles: true, composed: true}));
       return;
