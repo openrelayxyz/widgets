@@ -20,10 +20,13 @@ export default class OrWeb3Base extends LitElement {
     this.networkReady = new Promise((resolve, reject) => {
       this.resolveNetwork = resolve;
     })
-    this.updateComplete.then(() => {
-      setTimeout(() => {
-        this.ready();
-      });
+    this.isReady = this.updateComplete.then(() => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          this.ready();
+          resolve();
+        });
+      })
     });
   }
   ready() {

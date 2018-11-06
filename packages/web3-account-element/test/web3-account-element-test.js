@@ -20,8 +20,7 @@ describe('<or-web3-account>', () => {
       new CustomEvent('set-web3', {detail: {web3: web3}, bubbles: false, composed: false})
     );
     return document.getElementById('test-element').accountReady.then(() => {
-      document.getElementById("test-element").requestRender();
-      return document.getElementById("fixture").renderComplete.then(() => {
+      return document.getElementById("fixture").requestUpdate().then(() => {
         assert.notEqual(document.getElementById('test-element').shadowRoot.innerHTML.indexOf("0xf00df00df00df00df00df00df00df00df00df00d"), -1);
         web3.currentProvider.stop(console.log);
       });

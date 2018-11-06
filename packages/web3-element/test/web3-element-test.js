@@ -23,8 +23,7 @@ describe('<or-web3>', () => {
     document.getElementById("fixture").dispatchEvent(
       new CustomEvent('set-web3', {detail: {web3: web3}, bubbles: false, composed: false})
     );
-    document.getElementById("fixture").requestRender();
-    return document.getElementById("fixture").renderComplete.then(() => {
+    return document.getElementById("fixture").requestUpdate().then(() => {
       assert.isTrue(document.getElementById("fixture").hasWeb3);
       assert.equal(document.getElementById("fixture").shadowRoot.innerHTML, '<slot></slot>');
       web3.currentProvider.stop(console.log);

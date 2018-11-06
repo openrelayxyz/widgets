@@ -53,8 +53,7 @@ describe('<or-erc20-balance>', () => {
       new CustomEvent('set-web3', {detail: {web3: web3}, bubbles: false, composed: false})
     );
     return document.getElementById('test-element').balancePromise.then(() => {
-      document.getElementById("test-element").requestRender();
-      return document.getElementById("fixture").renderComplete.then(() => {
+      return document.getElementById("test-element").requestUpdate().then(() => {
         assert.notEqual(document.getElementById('test-element').shadowRoot.innerHTML.indexOf(">0.0000000000<"), -1);
         assert.equal(document.getElementById('test-element').balance.toString(), "0");
         web3.currentProvider.stop(console.log);
@@ -68,8 +67,7 @@ describe('<or-erc20-balance>', () => {
       new CustomEvent('set-web3', {detail: {web3: web3}, bubbles: false, composed: false})
     );
     return document.getElementById('test-element').balancePromise.then(() => {
-      document.getElementById("test-element").requestRender();
-      return document.getElementById("fixture").renderComplete.then(() => {
+      return document.getElementById("test-element").requestUpdate().then(() => {
         assert.notEqual(document.getElementById('test-element').shadowRoot.innerHTML.indexOf(">0.00<"), -1);
         assert.equal(document.getElementById('test-element').balance.toString(), "0");
         web3.currentProvider.stop(console.log);
@@ -83,8 +81,7 @@ describe('<or-erc20-balance>', () => {
       new CustomEvent('set-web3', {detail: {web3: web3}, bubbles: false, composed: false})
     );
     return document.getElementById('test-element').balancePromise.then(() => {
-      document.getElementById("test-element").requestRender();
-      return document.getElementById("fixture").renderComplete.then(() => {
+      return document.getElementById("test-element").requestUpdate().then(() => {
         assert.notEqual(document.getElementById('test-element').shadowRoot.innerHTML.indexOf(">0.10<"), -1);
         assert.equal(document.getElementById('test-element').balance.toString(), "100000000000000000");
         web3.currentProvider.stop(console.log);

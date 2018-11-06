@@ -52,8 +52,7 @@ describe('<or-sra-enable-token>', () => {
     document.getElementById("fixture").dispatchEvent(
       new CustomEvent('set-web3', {detail: {web3: web3}, bubbles: false, composed: false})
     );
-    document.getElementById("fixture").requestRender();
-    return document.getElementById("fixture").renderComplete.then(() => {
+    return document.getElementById("fixture").requestUpdate().then(() => {
       console.log(document.getElementById('test-element'), document.getElementById('test-element').value);
       assert.equal(document.getElementById('test-element').value, "disabled");
     });

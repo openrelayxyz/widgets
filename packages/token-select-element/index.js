@@ -34,6 +34,7 @@ export default class OrTokenSelect extends OrWeb3Base {
       this.initialized = request({url: this.tokenListUrl}).then((result) => {
         this.tokens = JSON.parse(result);
         this.initializeSelected();
+        return this.requestUpdate();
       });
     } else {
       this.initialized = new Promise((resolve, reject) => {
@@ -45,13 +46,15 @@ export default class OrTokenSelect extends OrWeb3Base {
     });
   }
   web3Updated() {
-    if(!this.tokenListUrl) {
+    if(!this.tokenListUrl && this.network) {
       this.initialized = Promise.resolve(null);
       // Get the current network if we have a token list, or show mainnet
       // tokens if we're on an unknown network.
-      this.tokens = tokenList[this.network] || tokenList["1"];
+      this.tokens = (tokenList[this.network] || tokenList["1"]);
       this.initializeSelected();
-      this._initializeResolve();
+      this.requestUpdate().then(() => {
+        return this._initializeResolve();
+      })
     }
   }
   initializeSelected() {
@@ -66,18 +69,20 @@ export default class OrTokenSelect extends OrWeb3Base {
     }
   }
   setToken(index) {
-    this.updateComplete.then(() => {
-      this.shadowRoot.querySelector("select").value = index;
+    return this.isReady.then(() => {
+      return this.initialized.then(() => {
+        this.shadowRoot.querySelector("select").value = index;
+        this.selectedIndex = index;
+        if(index >= 0) {
+          this.selectedToken = this.tokens[index];
+          this.selectedSymbol = this.selectedToken.symbol;
+        } else {
+          this.selctedToken = null;
+          this.selectedSymbol = null;
+        }
+        this.dispatch();
+      });
     });
-    this.selectedIndex = index;
-    if(index >= 0) {
-      this.selectedToken = this.tokens[index];
-      this.selectedSymbol = this.selectedToken.symbol;
-    } else {
-      this.selctedToken = null;
-      this.selectedSymbol = null;
-    }
-    this.dispatch();
   }
   dispatch() {
     this.dispatchEvent(new CustomEvent('change', {

@@ -7,6 +7,7 @@ import {assert} from "chai";
 describe('<or-sra-fee>', () => {
   var testArea;
   before(() => {
+    assert.ok(false);
     testArea = document.createElement("div");
     document.body.appendChild(testArea);
   });

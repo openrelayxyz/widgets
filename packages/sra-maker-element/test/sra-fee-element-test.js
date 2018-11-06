@@ -7,6 +7,7 @@ import {assert} from "chai";
 describe('<or-sra-fee>', () => {
   var testArea;
   before(() => {
+    assert.ok(false);
     testArea = document.createElement("div");
     document.body.appendChild(testArea);
   });
@@ -19,8 +20,7 @@ describe('<or-sra-fee>', () => {
     document.getElementById("fixture").dispatchEvent(
       new CustomEvent('set-web3', {detail: {web3: web3}, bubbles: false, composed: false})
     );
-    document.getElementById("fixture").requestRender();
-    return document.getElementById("fixture").renderComplete.then(() => {
+    return document.getElementById("fixture").requestUpdate().then(() => {
       return document.getElementById('test-element').feePromise.then(() => {
         assert.equal(document.getElementById('test-element').value, 0);
         assert.equal(document.getElementById('test-element').takerFee.toString(), "0");
@@ -34,8 +34,7 @@ describe('<or-sra-fee>', () => {
     document.getElementById("fixture").dispatchEvent(
       new CustomEvent('set-web3', {detail: {web3: web3}, bubbles: false, composed: false})
     );
-    document.getElementById("fixture").requestRender();
-    return document.getElementById("fixture").renderComplete.then(() => {
+    return document.getElementById("fixture").requestUpdate().then(() => {
       return document.getElementById('test-element').feePromise.then(() => {
         assert.equal(document.getElementById('test-element').value, 0);
         assert.equal(document.getElementById('test-element').takerFee.toString(), "0");
@@ -49,8 +48,7 @@ describe('<or-sra-fee>', () => {
     document.getElementById("fixture").dispatchEvent(
       new CustomEvent('set-web3', {detail: {web3: web3}, bubbles: false, composed: false})
     );
-    document.getElementById("fixture").requestRender();
-    return document.getElementById("fixture").renderComplete.then(() => {
+    return document.getElementById("fixture").requestUpdate().then(() => {
       return document.getElementById('test-element').feePromise.then(() => {
         document.getElementById('test-element').value = 50;
         assert.equal(document.getElementById('test-element').takerFee.toString(), "2500000000000000000");

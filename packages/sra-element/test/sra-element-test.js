@@ -15,7 +15,11 @@ describe('<or-sra>', () => {
   it('should hasWeb3 == false', () => {
     testArea.innerHTML = '<or-sra id="fixture">Web3 Content</or-sra>';
     assert.isFalse(document.getElementById("fixture").hasWeb3);
-    assert.equal(document.getElementById("fixture").shadowRoot.innerHTML, '<slot name="noweb3">You need web3 to view this content</slot>');
+    return document.getElementById("fixture").requestUpdate().then(() => {
+      setTimeout(() => {
+        assert.equal(document.getElementById("fixture").shadowRoot.innerHTML, '<slot name="noweb3">You need web3 to view this content</slot>');
+      }, 250);
+    })
   });
   it('should hasWeb3 == true', () => {
     testArea.innerHTML = '<or-sra id="fixture">Web3 Content</or-sra>';
@@ -23,11 +27,12 @@ describe('<or-sra>', () => {
     document.getElementById("fixture").dispatchEvent(
       new CustomEvent('set-web3', {detail: {web3: web3}, bubbles: false, composed: false})
     );
-    document.getElementById("fixture").requestRender();
-    return document.getElementById("fixture").renderComplete.then(() => {
-      assert.isTrue(document.getElementById("fixture").hasWeb3);
-      assert.equal(document.getElementById("fixture").shadowRoot.innerHTML, '<slot></slot>');
-      web3.currentProvider.stop(console.log);
+    setTimeout(() => {
+      return document.getElementById("fixture").requestUpdate().then(() => {
+        assert.isTrue(document.getElementById("fixture").hasWeb3);
+        assert.equal(document.getElementById("fixture").shadowRoot.innerHTML, '<slot></slot>');
+        web3.currentProvider.stop(console.log);
+      });
     });
   });
   it('should sra == "https://api.openrelay.xyz/"', () => {
@@ -42,8 +47,7 @@ describe('<or-sra>', () => {
     testArea.innerHTML = '<or-sra id="fixture">Web3 Content</or-sra>';
     assert.equal(document.getElementById("fixture").sra, "https://api.openrelay.xyz/");
     document.getElementById("fixture").sra = "https://other.relayer.com/path/";
-    document.getElementById("fixture").requestRender();
-    document.getElementById("fixture").renderComplete.then(() => {
+    return document.getElementById("fixture").requestUpdate().then(() => {
       assert.equal(document.getElementById("fixture").sra, "https://other.relayer.com/path/");
     })
   });

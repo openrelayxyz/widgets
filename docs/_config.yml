@@ -18,7 +18,7 @@ email: widgets@openrelay.xyz
 description: > # this means to ignore newlines until "baseurl:"
   Interactive documentation for OpenRelay's widgets
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://widgets.openrelay.xyz" # the base hostname & protocol for your site
+url: "https://widgets.openrelay.xyz" # the base hostname & protocol for your site
 twitter_username: open_relay
 github_username:  openrelayxyz
 permalink: /:categories/:title:output_ext
