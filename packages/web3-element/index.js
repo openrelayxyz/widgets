@@ -130,7 +130,6 @@ export default class OrWeb3 extends LitElement {
     });
   }
   setWeb3(web3Provider) {
-    this.loaded = true;
     this.hasWeb3 = true;
     this.web3 = new Web3(web3Provider);
     clearInterval(this.web3Interval);
@@ -152,11 +151,14 @@ export default class OrWeb3 extends LitElement {
       }
     } else {
       // The app wants to be in charge of calling enable. Start the watchers.
-      this.watchAccounts();
-      this.watchNetwork();
+      setTimeout(() => {
+        this.watchAccounts();
+        this.watchNetwork();
+      }, 50);
     }
   }
   watchNetwork() {
+    this.loaded = true;
     var getNetwork = () => {
       try {
         if(this.network != this.web3.version.network) {

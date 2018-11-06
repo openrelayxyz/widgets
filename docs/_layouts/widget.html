@@ -9,7 +9,7 @@ layout: default
 <script>
 let settings = {
   SRA_ENDPOINT: "https://api.openrelay.xyz/",
-  FEE_RECIPIENT_ADDRESS: "0xfaec02c3474b1a1c553eddf3df27946643cc7122",
+  FEE_RECIPIENT_ADDRESS: "{{ site.fee_recipient_address }}",
   {% for item in page.settings %}
   {{ item[0] }}: (window.location.hash.slice(1) || "{{ item[1] }}"),
   {% endfor %}
@@ -52,7 +52,7 @@ setTimeout(() => {
   {% if page.web3_override == true %}
   <widget-demo></widget-demo>
   {% else %}
-  <or-web3>
+  <or-web3 manualEnable>
     <widget-demo></widget-demo>
     <span slot="noweb3">
       Live demos require a web3 client. We recommend installing <a href="https://metamask.io/">Metamask</a>.

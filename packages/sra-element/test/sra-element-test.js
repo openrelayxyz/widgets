@@ -1,5 +1,5 @@
 import "@openrelay/sra-element";
-import {getFakeWeb3} from "@openrelay/element-test-utils";
+import {getFakeWeb3, normalizeElement} from "@openrelay/element-test-utils";
 import {assert} from "chai";
 
 
@@ -32,7 +32,7 @@ describe('<or-sra>', () => {
         resolve(document.getElementById("fixture").requestUpdate().then(() => {
           assert.isTrue(document.getElementById("fixture").hasWeb3);
           // Clean up whitespace and LitElement's markup
-          let innerHTML = document.getElementById("fixture").shadowRoot.innerHTML.split("\n").join(" ").split("<!---->").join(" ").split(" ").filter((a) => !!a).join(" ")
+          let innerHTML = normalizeElement(document.getElementById("fixture"));
           assert.equal(innerHTML, '<slot></slot> <slot name="errors"> <ul id="web3-errors"> </ul> </slot> <slot name="transactions"> <ul id="web3-transactions"> </ul> </slot>');
           web3.currentProvider.stop(console.log);
         }));

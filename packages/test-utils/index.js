@@ -57,3 +57,7 @@ export function getFakeWeb3(coreWallet) {
   engine.start()
   return web3
 }
+
+export function normalizeElement(el) {
+  return el.shadowRoot.innerHTML.split("\n").join(" ").split("<!---->").join(" ").split(" ").filter((a) => !!a).join(" ")
+}

@@ -23,6 +23,8 @@ twitter_username: open_relay
 github_username:  openrelayxyz
 permalink: /:categories/:title:output_ext
 
+fee_recipient_address: "0x74430e1338613b5a9166032cfd8f8f0a717bac67"
+
 # Build settings
 markdown: kramdown
 kramdown:
