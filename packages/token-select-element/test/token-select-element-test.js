@@ -23,7 +23,7 @@ describe('<or-token-select>', () => {
     return testElement.isReady.then(() => {
       return testElement.initialized.then(() => {
         assert.isNotOk(testElement.selectedToken);
-        assert.isAtLeast(testElement.shadowRoot.querySelectorAll("option").length, 100);
+        assert.isAtLeast(testElement.shadowRoot.querySelectorAll("option").length, 5);
       });
     })
   });

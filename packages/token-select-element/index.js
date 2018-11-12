@@ -9,7 +9,9 @@ export default class OrTokenSelect extends OrWeb3Base {
     var tokenOptions = [html`<option value="-1">Select a token</option>`];
     if(this.tokens) {
       for(var i = 0; i < this.tokens.length; i++) {
-        tokenOptions.push(html`<option value="${i}">${this.tokens[i].symbol}</option>`);
+        if(!this.greenOnly || this.tokens[i].greenlist) {
+          tokenOptions.push(html`<option value="${i}">${this.tokens[i].symbol}</option>`);
+        }
       }
     }
     let result = html`<select>${tokenOptions}</select>`;
@@ -26,12 +28,14 @@ export default class OrTokenSelect extends OrWeb3Base {
   }
   ready() {
     super.ready();
+    this.greenOnly = true;
     if (!this.selectedIndex) {
       this.selectedIndex = -1;
     }
     if(this.tokenListUrl) {
       this.tokens = [];
       this.initialized = request({url: this.tokenListUrl}).then((result) => {
+        this.greenOnly = false;
         this.tokens = JSON.parse(result);
         this.initializeSelected();
         return this.requestUpdate();
