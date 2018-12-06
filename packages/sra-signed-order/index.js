@@ -4,6 +4,7 @@ import request from "@openrelay/element-utilities/request";
 import {fillOrKillOrder} from "@openrelay/element-utilities/submit_order";
 import UnsignedOrder from "@openrelay/element-utilities/unsignedorder.js";
 import erc20ABI from "@openrelay/element-utilities/erc20-abi.json";
+import {address as tokenByAddress} from "@openrelay/element-utilities/tokensBy";
 import '@openrelay/sra-enable-token';
 
 export default class OrSRASignedOrderBase extends OrSRABase {
@@ -35,14 +36,18 @@ export default class OrSRASignedOrderBase extends OrSRABase {
       let makerTokenWrapper = tokenBase.at(this.makerTokenAddress);
       let takerTokenWrapper = tokenBase.at(this.takerTokenAddress);
       if(!this.makerTokenName) {
-        makerTokenWrapper.symbol.call((err, symbol) => {
-          if(!err) {
-            this.makerTokenName = symbol;
-            this.requestUpdate();
-          } else {
-            console.log(err);
-          }
-        });
+        if(tokenByAddress[this.network][this.makerTokenAddress]) {
+          this.makerTokenName = tokenByAddress[this.network][this.makerTokenAddress].symbol;
+        } else {
+          makerTokenWrapper.symbol.call((err, symbol) => {
+            if(!err) {
+              this.makerTokenName = symbol;
+              this.requestUpdate();
+            } else {
+              console.log(`Error getting maker token symbol for address ${this.makerTokenAddress}`, err);
+            }
+          });
+        }
       }
       let makerTokenDecimal = new Promise((resolve, reject) => {
         if(this.makerTokenDecimal == 18){
@@ -60,12 +65,18 @@ export default class OrSRASignedOrderBase extends OrSRABase {
         }
       });
       if(!this.takerTokenName) {
-        takerTokenWrapper.symbol.call((err, symbol) => {
-          if(!err) {
-            this.takerTokenName = symbol;
-            this.requestUpdate();
-          }
-        });
+        if(tokenByAddress[this.network][this.takerTokenAddress]) {
+          this.takerTokenName = tokenByAddress[this.network][this.takerTokenAddress].symbol;
+        } else {
+          takerTokenWrapper.symbol.call((err, symbol) => {
+            if(!err) {
+              this.takerTokenName = symbol;
+              this.requestUpdate();
+            } else {
+              console.log(`Error getting taker token symbol for address ${this.takerTokenAddress}: ${err}`);
+            }
+          });
+        }
       }
       let takerTokenDecimal = new Promise((resolve, reject) => {
         if(this.takerTokenDecimal == 18) {

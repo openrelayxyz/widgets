@@ -22,7 +22,7 @@ export default class OrSRAEnableToken extends OrSRABase {
     this.enabled = false;
     this.shadowRoot.querySelector("button").addEventListener("click", () => {
       // TODO: Find a way to show the user the transaction ID
-      this.tokenWrapper.approve(this.operatorAddress || this.erc20ProxyAddress, this.enabled ? "0" : this.quantity, (error, txid) => {
+      this.tokenWrapper.approve(this.operatorAddress || this.erc20ProxyAddress, this.enabled ? "0" : this.quantity, {from: this.account}, (error, txid) => {
         if(error) {
           this.emitError(error);
         } else {

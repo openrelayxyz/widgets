@@ -46,7 +46,7 @@ export default class OrTokenSelect extends OrWeb3Base {
       });
     }
     this.shadowRoot.querySelector("select").addEventListener("change", (e) => {
-      this.setToken(e.target.selectedIndex - 1);
+      this.setToken(e.target.value);
     });
   }
   web3Updated() {
