@@ -1,7 +1,7 @@
 {
-  "name": "@openrelay/sra-search-result",
+  "name": "@openrelay/sra-terms-of-use",
   "version": "0.1.1",
-  "description": "A lit-element that searches a 0x Relayer and displays signed orders to the user",
+  "description": "A lit-element that enables users to sign the OpenRelay terms of use",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
@@ -31,9 +31,9 @@
   "author": "OpenRelay LLC",
   "license": "LGPL-3.0",
   "dependencies": {
-    "@0xproject/contract-wrappers": "^1.0.1",
     "@openrelay/web3-base": "^0.1.0",
     "@openrelay/web3-element": "^0.1.0",
+    "@openrelay/web3-enable": "^0.1.0",
     "@polymer/lit-element": "0.6.2"
   }
 }

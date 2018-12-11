@@ -1,6 +1,6 @@
 {
   "name": "@openrelay/token-select-element",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A lit-element that provides a list of tokens to select from",
   "main": "index.js",
   "scripts": {

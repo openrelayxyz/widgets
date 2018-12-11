@@ -1,6 +1,6 @@
 {
   "name": "@openrelay/erc20-balance",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A lit-element that displays the balance of the specified erc20 token",
   "main": "index.js",
   "scripts": {

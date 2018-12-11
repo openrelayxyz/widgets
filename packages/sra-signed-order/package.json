@@ -1,6 +1,6 @@
 {
   "name": "@openrelay/sra-signed-order",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A lit-element that displays a signed 0x order",
   "main": "index.js",
   "scripts": {

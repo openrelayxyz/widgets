@@ -1,6 +1,6 @@
 {
   "name": "@openrelay/sra-base",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A base class for creating lit-elements that depend on the sra-element",
   "main": "index.js",
   "scripts": {

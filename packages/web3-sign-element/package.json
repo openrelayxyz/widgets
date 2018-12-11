@@ -1,6 +1,6 @@
 {
   "name": "@openrelay/web3-sign-element",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A lit-element that signs messages",
   "main": "index.js",
   "scripts": {

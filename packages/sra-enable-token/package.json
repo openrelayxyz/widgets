@@ -1,6 +1,6 @@
 {
   "name": "@openrelay/sra-enable-token",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A lit-element that enable a token for trading",
   "main": "index.js",
   "scripts": {

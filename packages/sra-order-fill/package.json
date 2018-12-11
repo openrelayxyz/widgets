@@ -1,6 +1,6 @@
 {
   "name": "@openrelay/sra-order-fill",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A lit-element that enables the user to fill a 0x order based on its hash",
   "main": "index.js",
   "scripts": {

@@ -8,7 +8,9 @@ code:
   html: |
 
     <or-sra sra="#SRA_ENDPOINT#" feeRecipient="#FEE_RECIPIENT_ADDRESS#">
-        <or-sra-maker></or-sra-maker>
+        <or-sra-terms-of-use>
+          <or-sra-maker></or-sra-maker>
+        </or-sra-terms-of-use>
         <span slot="net">42</span>
         <span slot="net">1</span>
         <span slot="netunsupported">At this time, this widget is only supported on Kovan and mainnet</span>
@@ -20,6 +22,10 @@ code:
 The maker element provides the user with all of the necessary inputs to make an
 order and submit it to a relayer. The relayer it is submitted to may be changed
 from the ancestor `<or-sra>` element.
+
+Note that the `<or-sra-maker>` will not work until the terms of use have been
+accepted, so in the above example we have wrapped it with the
+[`<or-sra-terms-of-use>` tag](./or-sra-terms-of-use.html).
 
 
 #### API
