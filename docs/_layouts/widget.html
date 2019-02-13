@@ -8,7 +8,7 @@ layout: default
 {% endif %}
 <script>
 let settings = {
-  SRA_ENDPOINT: "https://api.openrelay.xyz/",
+  SRA_ENDPOINT: "{{ site.sra_endpoint }}",
   FEE_RECIPIENT_ADDRESS: "{{ site.fee_recipient_address }}",
   {% for item in page.settings %}
   {{ item[0] }}: (window.location.hash.slice(1) || "{{ item[1] }}"),

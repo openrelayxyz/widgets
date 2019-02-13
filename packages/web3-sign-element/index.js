@@ -12,6 +12,7 @@ export default class OrWeb3Sign extends OrWeb3Base {
       if(err) {
         return this.dispatch(err);
       }
+      console.log(err, result);
       let signature = ethjsutil.toBuffer(result);
       let v = signature[64];
       if(v < 27) {
@@ -42,7 +43,12 @@ export default class OrWeb3Sign extends OrWeb3Base {
     if(this.plaintext) {
       this.web3.personal.sign(this.plaintext, this.account, verify);
     } else {
-      this.web3.eth.sign(this.account, this.message, verify);
+      if(this.web3.personal) {
+        console.log(this.message);
+        this.web3.personal.sign(this.message, this.account, verify);
+      } else {
+        this.web3.eth.sign(this.account, this.message, verify);
+      }
     }
   }
   web3Updated() {

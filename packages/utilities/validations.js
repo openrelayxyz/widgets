@@ -36,6 +36,7 @@ export function numberValidOrThrow(value) {
   if(!numberValid(value)) {
     throw "Invalid number " + value;
   }
+  value.toJSON = () => value.toFixed(0);
   return value;
 }
 

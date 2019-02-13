@@ -152,6 +152,7 @@ export default class OrSRAMaker extends OrSRABase {
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(body),
       }).then((result) => {
+        // TODO: Update the UI
         console.log("Posted");
       }).catch((error) => {
         console.log(error);
