@@ -4,7 +4,6 @@ import OrWeb3Base from '@openrelay/web3-base';
 export default class OrSRABase extends OrWeb3Base {
   constructor() {
     super();
-    this.sra = "https://api.openrelay.xyz/";
   }
   ready() {
     super.ready();
@@ -20,6 +19,7 @@ export default class OrSRABase extends OrWeb3Base {
     this.feeTokenAddress = e.detail.feeTokenAddress;
     this.wethAddress = e.detail.wethAddress;
     this.erc20ProxyAddress = e.detail.erc20ProxyAddress;
+    this.erc721ProxyAddress = e.detail.erc721ProxyAddress;
     this._sraUpdated();
   }
   _sraUpdated() {

@@ -18,8 +18,6 @@ export default class OrSRA extends OrWeb3 {
     super();
     this.sraChildren = [];
     this.sender = "0x0000000000000000000000000000000000000000";
-    this.sra = "https://api.openrelay.xyz/";
-    this.feeRecipient = "0x74430e1338613b5a9166032cfd8f8f0a717bac67";
     this.addEventListener('sra-child', e => this.registerSRAChild(e));
     this.epochReady = this.networkReady.then(() => {
       return new Promise((resolve, reject) => {
@@ -30,6 +28,15 @@ export default class OrSRA extends OrWeb3 {
         })
       });
     });
+  }
+  ready() {
+    console.log(this.sra);
+    if(!this.sra) {
+      this.sra = "https://api.openrelay.xyz/";
+    }
+    if(!this.feeRecipient) {
+      this.feeRecipient = "0x74430e1338613b5a9166032cfd8f8f0a717bac67";
+    }
   }
   registerSRAChild(e) {
     this.sraChildren.push(e.detail.element);
@@ -44,15 +51,18 @@ export default class OrSRA extends OrWeb3 {
     return super.update(changedProps);
   }
   _dispatch(element) {
-    element.dispatchEvent(new CustomEvent('sra-ready', {detail: {
+    if(this.sra) {
+      element.dispatchEvent(new CustomEvent('sra-ready', {detail: {
         sra: this.sra,
         feeRecipient: this.feeRecipient,
         exchangeAddress: this.exchangeAddress,
         feeTokenAddress: this.feeTokenAddress,
         erc20ProxyAddress: this.erc20ProxyAddress,
+        erc721ProxyAddress: this.erc721ProxyAddress,
         wethAddress: this.wethAddress,
         epoch: this.epoch,
-    }, bubbles: false, composed: false}));
+      }, bubbles: false, composed: false}));
+    }
   }
   get exchangeAddress() {
     return this.exchange || ({
@@ -72,6 +82,13 @@ export default class OrSRA extends OrWeb3 {
     return ({
       "1": "0x2240dab907db71e64d3e0dba4800c83b5c502d4e",
       "42": "0xf1ec01d6236d3cd881a0bf0130ea25fe4234003e",
+    })[this.network];
+  }
+  get erc721ProxyAddress() {
+    // TODO: Pull this if this.exchange is not default
+    return ({
+      "1": "0x208e41fb445f1bb1b6780d58356e81405f3e6127",
+      "42": "0x2a9127c745688a165106c11cd4d647d2220af821",
     })[this.network];
   }
   get wethAddress() {

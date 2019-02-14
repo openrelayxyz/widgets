@@ -27,11 +27,14 @@ export default class OrSRAFee extends OrSRABase {
     this.feePromise = new Promise((resolve, reject) => {
       this._resolveFee = resolve;
     });
-    this.value = 0;
     // this.disabled = false;
   }
   ready() {
     super.ready();
+    console.log(this.value);
+    if(!this.value) {
+      this.value = 0;
+    }
     if(this.totalFee) {
       this._initialTotalFee = this.totalFee;
     } else {
@@ -95,7 +98,7 @@ export default class OrSRAFee extends OrSRABase {
     return super.update(changedProps);
   }
   refreshFee() {
-    if(!this.web3) {
+    if(!this.web3 || !this.sra) {
       return;
     }
     var body = {};
