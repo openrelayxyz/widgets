@@ -1,8 +1,9 @@
 import * as ethjsutil from 'ethereumjs-util';
+import Web3 from 'web3';
 
 export default class Signer {
   constructor(web3, account) {
-    this.web3 = web3;
+    this.web3 = new Web3(web3.currentProvider);
     this.account = account;
     this.nopersonal = false;
   }
