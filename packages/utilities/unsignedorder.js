@@ -1,13 +1,15 @@
 import {bigNumberToBuffer} from '@openrelay/element-utilities';
 import {trim} from '@openrelay/element-utilities';
 import {addressValidOrThrow, numberValidOrThrow, assetDataValidOrThrow} from '@openrelay/element-utilities/validations.js';
+import Web3 from 'web3';
 
 export default class UnsignedOrder {
   constructor(order, web3) {
-    this.web3 = web3 || window.web3;
-    if(!this.web3) {
+    let provider = web3.currentProvider || window.web3.currentProvider;
+    if(!provider) {
       throw "Web3 not found. Please provide one.";
     }
+    this.web3 = new Web3(provider);
     this.exchangeAddress = addressValidOrThrow(order.exchangeAddress);
     this.expirationTimeSeconds = numberValidOrThrow(this.web3.toBigNumber(order.expirationTimeSeconds));
     this.feeRecipientAddress = addressValidOrThrow(order.feeRecipientAddress);
