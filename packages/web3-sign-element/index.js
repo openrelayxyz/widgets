@@ -1,6 +1,7 @@
 import {html} from '@polymer/lit-element';
 import OrWeb3Base from '@openrelay/web3-base';
 import * as ethjsutil from 'ethereumjs-util';
+import Signer from '@openrelay/element-utilities/signing.js';
 
 export default class OrWeb3Sign extends OrWeb3Base {
   static get is() { return "or-web3-sign" };
@@ -8,73 +9,24 @@ export default class OrWeb3Sign extends OrWeb3Base {
     return html`<button @click=${this.click} ?disabled="${!this.message && !this.plaintext}">Sign</button>`;
   }
   click() {
-    let verify = (err, result) => {
-      if(err) {
-        return this.dispatch(err);
-      }
-      console.log(err, result);
-      let signature = ethjsutil.toBuffer(result);
-      let v = signature[64];
-      if(v < 27) {
-        // Some clients return v={0,1} instead of v={27,28}
-        v += 27;
-      }
-      let r = signature.slice(0, 32);
-      let s = signature.slice(32, 64);
-      var msgBuffer = ethjsutil.toBuffer(this.message || this.plaintext);
-      if (this.account == this._recover(msgBuffer, v, r, s)) {
-        // non-prefixed message matches EIP712
-        this.dispatch(null, v, r, s, 2);
-      } else if (this.account == this._recover(msgBuffer, v, s, r)) {
-        // non-prefixed message matches EIP712
-        // Some web3 clients return v, s, r instead of v, r, s, so we try both
-        this.dispatch(null, v, s, r, 2);
-      } else if (this.account == this._recover(this._prefixedMsg(msgBuffer), v, r, s)) {
-        // Prefixed message matches ethsign
-        this.dispatch(null, v, r, s, 3);
-      } else if (this.account == this._recover(this._prefixedMsg(msgBuffer), v, s, r)) {
-        // Prefixed message matches ethsign
-        // Some web3 clients return v, s, r instead of v, r, s, so we try both
-        this.dispatch(null, v, s, r, 3);
-      } else {
-        this.dispatch("Error signing message. Signature could not be verified.")
-      }
-    };
+    let signer = new Signer(this.web3, this.account);
+    let signature;
     if(this.plaintext) {
-      this.web3.personal.sign(this.plaintext, this.account, verify);
+      signature = signer.signMessage(this.plaintext);
     } else {
-      if(this.web3.personal) {
-        console.log(this.message);
-        this.web3.personal.sign(this.message, this.account, verify);
-      } else {
-        this.web3.eth.sign(this.account, this.message, verify);
-      }
+      signature = signer.signMessage(this.message);
     }
+    signature.then((sig) => {
+      this.value = sig;
+      this.dispatchEvent(new CustomEvent('sign', {detail: {signature: sig}, bubbles: true, composed: true}));
+    }).catch((err) => {
+      this.dispatchEvent(new CustomEvent('sign', {detail: {error: err}, bubbles: true, composed: true}));
+    });
   }
   web3Updated() {
     if(this.rawMessage && !this.message) {
       this.message = this.web3.sha3(this.rawMessage);
     }
-  }
-  _prefixedMsg(msgBuffer) {
-    return ethjsutil.toBuffer(ethjsutil.keccak256(Buffer.concat([ethjsutil.toBuffer(`\x19Ethereum Signed Message:\n${msgBuffer.length}`), msgBuffer])));
-  }
-  _recover(msg, v, r, s) {
-    try {
-      let x = ethjsutil.bufferToHex(ethjsutil.pubToAddress(ethjsutil.ecrecover(msg, v, r, s)));
-      return x;
-    } catch (e) {
-      return "badsignature";
-    }
-  }
-  dispatch(err, v, r, s, sigType) {
-    if(err) {
-      this.dispatchEvent(new CustomEvent('sign', {detail: {error: err}, bubbles: true, composed: true}));
-      return;
-    }
-    var signature = ethjsutil.bufferToHex(Buffer.concat([new Buffer([v]), r, s, new Buffer([sigType])]));
-    this.value = signature;
-    this.dispatchEvent(new CustomEvent('sign', {detail: {error: err, signature: signature}, bubbles: true, composed: true}));
   }
   static get properties() {
     return {
