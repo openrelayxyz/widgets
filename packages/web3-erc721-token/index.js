@@ -1,7 +1,6 @@
 import {html} from '@polymer/lit-element';
 import OrWeb3Base from '@openrelay/web3-base';
-import erc721ABI from '@openrelay/element-utilities/erc721-abi.json';
-import request from "@openrelay/element-utilities/request";
+import ERC721Metadata from "@openrelay/element-utilities/erc721metadata.js";
 
 export default class OrWeb3ERC721Token extends OrWeb3Base {
   static get is() { return "or-web3-erc721-token" };
@@ -37,25 +36,25 @@ export default class OrWeb3ERC721Token extends OrWeb3Base {
     return html`
       <div class="erc721-token">
         ${content}
-        <button>List for sale</button>
       </div>
     `;
   }
   web3Updated() {
-    this.contract = this.web3.eth.contract(erc721ABI).at(this.address);
-    this.contract.tokenURI(this.tokenId, (err, uri) => {
-      if(err) { this.error = err; return; }
-      this.tokenURI = uri;
-      request({url: this.tokenURI}).then((result) => {
-        try {
-          this.metadata = JSON.parse(result);
-          this.requestUpdate();
-        } catch(e) {
-          this.error = e;
-        }
-      }).catch((error) => {
-        this.error = error;
-      })
+    this.erc721MetadataFetcher = new ERC721Metadata(this.web3);
+    let ancestor = this.parentElement;
+    while(ancestor && ancestor.tagName != "HTML") {
+      if(ancestor.erc721MetadataFetcher) {
+        this.erc721MetadataFetcher = ancestor.erc721MetadataFetcher;
+        break;
+      }
+      ancestor = ancestor.parentElement || ancestor.parentNode.host;
+    }
+    this.erc721MetadataFetcher.get(this.address, this.tokenId).then((metadata) => {
+      this.metadata = metadata;
+    }).catch((error) => {
+      this.error = error;
+    }).then(() => {
+      this.requestUpdate();
     });
   }
   static get properties() {

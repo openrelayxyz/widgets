@@ -11,7 +11,6 @@ import UnsignedOrder from '@openrelay/element-utilities/unsignedorder';
 export default class OrSRAERC721TokenSale extends OrSRABase {
   static get is() { return "or-sra-erc721-token-sale" };
   render() {
-    console.log("Render()")
     let result = [html`<button @click="${this.openSale}">List For Sale</button>`]
     if(this.open) {
       let signButton = html``;
@@ -27,7 +26,6 @@ export default class OrSRAERC721TokenSale extends OrSRABase {
         </or-sra-terms-of-use>
       </div>`)
     }
-    console.log(result);
     return html`${result}`;
   }
   onSign(e) {

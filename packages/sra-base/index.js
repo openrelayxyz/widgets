@@ -2,16 +2,16 @@ import { html} from '@polymer/lit-element';
 import OrWeb3Base from '@openrelay/web3-base';
 
 export default class OrSRABase extends OrWeb3Base {
-  constructor() {
-    super();
-  }
   ready() {
     super.ready();
+    this._was_hidden = this.hidden;
+    this.hidden = true;
     this.addEventListener('sra-ready', e => this.setSRA(e));
     setTimeout(() => this.dispatchEvent(new CustomEvent('sra-child', {detail: {element: this}, bubbles: true, composed: true})));
     this._sraUpdated();
   }
   setSRA(e) {
+    this.hidden = this._was_hidden;
     this.sra = e.detail.sra;
     this.feeRecipient = e.detail.feeRecipient;
     this.exchangeAddress = e.detail.exchangeAddress;
