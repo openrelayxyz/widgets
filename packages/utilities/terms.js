@@ -8,7 +8,7 @@ export default class Terms {
     this.sra = sra;
   }
   authorized(account) {
-    request({
+    return request({
       url: `${this.sra}v2/_tos/${account}`
     }).then(() => {
       return true;
