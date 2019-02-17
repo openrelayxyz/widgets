@@ -67,4 +67,10 @@ export default class UnsignedOrder {
       {encoding: "hex"}
     );
   }
+  get json() {
+    let web3 = this.web3;
+    this.web3 = undefined;
+    let data = JSON.stringify(this);
+    this.web3 = web3;
+  }
 }
